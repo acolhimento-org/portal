@@ -1,0 +1,21 @@
+{
+  "name": "acolhimento-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/build-indexes.mjs",
+    "prebuild": "node scripts/build-indexes.mjs",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/vue": "^5.0.0",
+    "@fontsource-variable/sora": "^5.2.8",
+    "astro": "^5.1.0",
+    "leaflet": "^1.9.4",
+    "vue": "^3.5.13"
+  }
+}

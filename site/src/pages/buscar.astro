@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import NearbySearch from '../components/NearbySearch.vue';
+
+const title = 'Buscar ajuda perto de mim: CAPS AD, CAPS e grupos de apoio | Acolhimento';
+const description =
+  'Use sua localização para encontrar os serviços gratuitos de tratamento de álcool e drogas ' +
+  'mais próximos: CAPS AD, CAPS do SUS e reuniões de Narcóticos Anônimos.';
+---
+<Base title={title} description={description}>
+  <div class="container">
+    <p class="crumbs"><a href="/">Início</a> › Perto de mim</p>
+    <h1>Ajuda perto de você</h1>
+    <p class="intro">
+      Toque no botão e mostramos os serviços <strong>gratuitos</strong> mais próximos,
+      no mapa e em lista. Sua localização é usada só no seu navegador, e não guardamos nada.
+    </p>
+    <NearbySearch client:only="vue" />
+    <p class="alt">Prefere buscar pelo nome da cidade? <a href="/">Volte à página inicial</a>.</p>
+  </div>
+
+  <style>
+    .intro { color: var(--ink-soft); max-width: 44em; margin-bottom: var(--s5); }
+    .alt { margin-top: var(--s6); color: var(--ink-soft); font-size: .92rem; }
+  </style>
+</Base>

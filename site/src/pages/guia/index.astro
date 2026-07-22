@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const title = 'Guias: como funciona buscar ajuda para álcool e drogas | Acolhimento';
+const description =
+  'Guias curtos e diretos: o que esperar na primeira ida ao CAPS ou ao NA, seus ' +
+  'direitos, que perguntas fazer e como ajudar um familiar.';
+
+const guias = [
+  {
+    href: '/guia/o-que-esperar/',
+    titulo: 'O que esperar na primeira vez',
+    texto: 'Como funciona chegar num CAPS AD ou numa reunião de NA: o que acontece, o que levar, o que ninguém vai exigir de você.',
+  },
+  {
+    href: '/guia/direitos/',
+    titulo: 'Seus direitos',
+    texto: 'Tratamento gratuito é direito garantido por lei. E internação tem regras: entenda a diferença entre voluntária, involuntária e compulsória.',
+  },
+  {
+    href: '/guia/perguntas/',
+    titulo: 'Perguntas para fazer',
+    texto: 'Uma lista curta de perguntas úteis para quando você ligar ou visitar um serviço, adaptada de guias internacionais.',
+  },
+  {
+    href: '/guia/familia/',
+    titulo: 'Para a família',
+    texto: 'Como ajudar alguém que ainda não aceitou ajuda, onde a família encontra apoio para si, e por que cuidar de quem cuida importa.',
+  },
+];
+---
+<Base title={title} description={description}>
+  <section class="band band--intro">
+    <div class="container">
+      <p class="crumbs"><a href="/">Início</a> › Guias</p>
+      <p class="eyebrow eyebrow--left">Guias</p>
+      <h1>Ninguém nasce sabendo procurar ajuda</h1>
+      <p class="lede">
+        Estes guias são curtos de propósito. Eles explicam como as coisas funcionam
+        na prática, para o caminho até a ajuda ter o mínimo possível de surpresa.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container">
+      <div class="gcards">
+        {guias.map((g) => (
+          <a class="gcard" href={g.href}>
+            <h2>{g.titulo}</h2>
+            <p>{g.texto}</p>
+            <span class="go">Ler o guia</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s7); }
+    .lede { font-size: 1.02rem; max-width: 56ch; }
+    .gcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s4); }
+    .gcard {
+      display: block; background: var(--surface); border-radius: var(--radius);
+      padding: var(--s5); text-decoration: none; box-shadow: var(--shadow);
+      border: 1px solid transparent;
+    }
+    .gcard:hover { border-color: var(--primary); }
+    .gcard h2 { margin: 0 0 var(--s2); font-size: 1.15rem; }
+    .gcard p { color: var(--ink-soft); font-size: .92rem; margin: 0 0 var(--s3); }
+    .go { font-size: .88rem; font-weight: 600; color: var(--primary-ink); }
+  </style>
+</Base>

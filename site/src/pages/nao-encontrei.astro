@@ -1,0 +1,102 @@
+---
+import Base from '../layouts/Base.astro';
+
+const title = 'Sua cidade ainda não tem serviço mapeado. Veja por onde começar | Acolhimento';
+const description =
+  'Mesmo sem CAPS na sua cidade, existe caminho: a UBS do seu bairro é a porta de ' +
+  'entrada do SUS e faz o encaminhamento. Veja também os serviços mais próximos de você.';
+---
+<Base title={title} description={description}>
+  <section class="band band--intro">
+    <div class="container narrow">
+      <p class="crumbs"><a href="/">Início</a> › Cidade sem serviço mapeado</p>
+      <p class="eyebrow eyebrow--left">Não desista aqui</p>
+      <h1>Sua cidade ainda não tem CAPS ou grupo mapeado. Mesmo assim existe caminho.</h1>
+      <p class="lede">
+        Cidades menores muitas vezes não têm um CAPS próprio, e tudo bem: o SUS
+        foi desenhado para isso. O caminho passa pela unidade de saúde do seu
+        bairro, e os serviços da região também atendem quem vem de fora.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Três caminhos, na ordem que costuma funcionar</h2>
+      <ol class="steps">
+        <li>
+          <span class="step-n">01</span>
+          <div>
+            <strong>Vá à UBS (posto de saúde) do seu bairro</strong>
+            <p>
+              A UBS é a porta de entrada do SUS em toda cidade do Brasil, e o
+              atendimento é gratuito. A equipe acolhe, orienta e encaminha para o
+              serviço especializado da região quando é o caso. Não precisa agendar
+              para ser acolhido.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="step-n">02</span>
+          <div>
+            <strong>Veja o que existe perto de você</strong>
+            <p>
+              CAPS atendem também quem vem de cidades vizinhas, e reuniões de NA
+              recebem qualquer pessoa. Use a busca por localização para ver o que
+              há na sua região, com endereço e horário.
+            </p>
+            <p class="mt"><a class="btn" href="/buscar/">Buscar perto de mim</a></p>
+          </div>
+        </li>
+        <li>
+          <span class="step-n">03</span>
+          <div>
+            <strong>Se preferir falar com alguém agora</strong>
+            <p>
+              O CVV atende no <a href="tel:188">188</a>, 24 horas, de graça e sem
+              julgamento. Para informações sobre serviços do SUS, o Disque Saúde
+              atende no <a href="tel:136">136</a>. Em emergência, ligue
+              <a href="tel:192">192</a>.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>Reuniões online também existem</h2>
+      <p>
+        Muitos grupos de Narcóticos Anônimos fazem reuniões virtuais, que qualquer
+        pessoa pode acompanhar de qualquer cidade. Na <a href="/buscar/">busca por
+        localização</a>, os grupos online aparecem marcados como "reunião online".
+      </p>
+      <p>
+        E se você souber de um serviço ou grupo na sua cidade que não está aqui,
+        <a href="/sobre/#correcao">avise a gente</a>: incluímos e a próxima pessoa
+        que procurar já encontra.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s7); }
+    .narrow { max-width: 72ch; }
+    .lede { font-size: 1.02rem; }
+    .narrow h2 { margin-bottom: var(--s4); }
+    .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+    .steps li {
+      display: flex; gap: var(--s4); align-items: flex-start;
+      background: var(--surface); border-radius: var(--radius); padding: var(--s5);
+    }
+    .step-n {
+      flex: none; font-size: .8rem; font-weight: 700; color: var(--accent-ink);
+      letter-spacing: .04em; padding-top: 2px;
+    }
+    .steps strong { display: block; font-size: 1rem; color: var(--ink); margin-bottom: 2px; }
+    .steps p { margin: 0; font-size: .92rem; }
+    .steps p + p { margin-top: var(--s2); }
+    .mt { margin-top: var(--s3); }
+  </style>
+</Base>

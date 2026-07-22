@@ -1,0 +1,117 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const title = 'Para a família: como ajudar quem ainda não aceitou ajuda | Acolhimento';
+const description =
+  'O que a evidência sugere para familiares: como estimular o tratamento sem ' +
+  'ultimatos, onde a família encontra apoio para si (Al-Anon, Nar-Anon, Amor ' +
+  'Exigente) e por que cuidar de quem cuida importa.';
+---
+<Base title={title} description={description}>
+  <section class="band band--intro">
+    <div class="container narrow">
+      <p class="crumbs"><a href="/">Início</a> › <a href="/guia/">Guias</a> › Para a família</p>
+      <p class="eyebrow eyebrow--left">Guia</p>
+      <h1>Para quem está buscando ajuda por outra pessoa</h1>
+      <p class="lede">
+        Boa parte de quem chega a este site não é a pessoa que usa: é a mãe, o
+        filho, a irmã, o amigo. Este guia reúne o que os programas com melhor
+        evidência ensinam às famílias, e onde a própria família encontra apoio.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>O que costuma funcionar, segundo a evidência</h2>
+      <p>
+        Existe um método estudado há décadas para famílias de pessoas que ainda não
+        aceitaram tratamento, chamado CRAFT. Os ensaios clínicos dele mostram que a
+        maioria das famílias treinadas consegue, com o tempo, que a pessoa aceite
+        buscar ajuda. Os princípios centrais, em linguagem simples:
+      </p>
+      <ul class="fatos">
+        <li><strong>Momentos de abertura existem, e são a hora de agir.</strong> Depois de uma crise, de um susto ou de uma conversa boa, a disposição para aceitar ajuda aumenta. Ter o endereço e o horário do serviço já pesquisados (é para isso que este site existe) permite agir na hora certa.</li>
+        <li><strong>Reforçar o positivo funciona melhor que punir o negativo.</strong> Valorizar os momentos sóbrios e as pequenas iniciativas tende a aproximar; sermão e humilhação tendem a afastar.</li>
+        <li><strong>Ultimato raramente funciona; convite específico funciona mais.</strong> "Você precisa se internar" costuma travar a conversa. "Encontrei um lugar gratuito perto de casa, vamos lá só conhecer, eu vou junto" abre porta.</li>
+        <li><strong>Consequências naturais podem acontecer.</strong> Proteger a pessoa de toda consequência do uso, pagando dívidas ou inventando desculpas por ela, costuma adiar a decisão de buscar ajuda.</li>
+        <li><strong>A segurança vem primeiro.</strong> Em situação de violência ou risco, a prioridade é proteger quem está vulnerável. Em emergência, 192. Em violência, 190.</li>
+      </ul>
+      <p class="obs">
+        Nenhuma técnica garante resultado, e a recusa de hoje não é a resposta
+        definitiva. Enquanto a pessoa não aceita, a família pode se fortalecer, e
+        isso muda o jogo mais do que parece.
+      </p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>Apoio para a própria família (gratuito, como tudo aqui)</h2>
+      <p>
+        Existem grupos onde familiares de dependentes se apoiam mutuamente. Neles,
+        quem chega encontra gente que passou pelo mesmo e aprendeu caminhos. São
+        gratuitos e não exigem inscrição:
+      </p>
+      <ul class="grupos">
+        <li>
+          <strong><a href="https://al-anon.org.br/grupos/" rel="noopener">Al-Anon</a></strong>
+          <span>para familiares e amigos de pessoas com problema com álcool. Mais de 300 grupos no país.</span>
+        </li>
+        <li>
+          <strong><a href="https://www.naranon.org.br/" rel="noopener">Nar-Anon</a></strong>
+          <span>para familiares e amigos de pessoas com problema com outras drogas.</span>
+        </li>
+        <li>
+          <strong><a href="https://amorexigente.org.br/" rel="noopener">Amor Exigente</a></strong>
+          <span>grupos de orientação familiar presentes em todo o Brasil desde 1984.</span>
+        </li>
+      </ul>
+      <p>
+        O CAPS também atende a família: dá para ir lá <strong>mesmo sem a pessoa que
+        usa</strong>, conversar com a equipe e receber orientação para o seu caso.
+        Muitos têm grupos de familiares.
+      </p>
+      <p class="obs">
+        Pretendemos mapear os grupos de familiares com endereço e horário, como
+        fazemos com o NA. Por enquanto, os links acima levam aos diretórios oficiais.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Cuidar de quem cuida não é egoísmo</h2>
+      <p>
+        Conviver com a dependência de alguém querido esgota. Dormir mal, adoecer e
+        se isolar não ajuda ninguém, nem você, nem a pessoa. Os grupos acima
+        existem exatamente para isso, e o CVV (<a href="tel:188">188</a>) também
+        atende familiares, 24 horas, de graça.
+      </p>
+      <p>
+        <a class="btn" href="/buscar/">Achar um CAPS perto de você</a>
+        <a class="btn secondary" href="/guia/direitos/">Entender internação e direitos</a>
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s7); }
+    .narrow { max-width: 72ch; }
+    .lede { font-size: 1.02rem; }
+    .narrow h2 { margin-bottom: var(--s4); }
+    .fatos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+    .fatos li {
+      background: var(--surface); border-radius: var(--radius-sm);
+      padding: var(--s3) var(--s4); font-size: .95rem;
+    }
+    .grupos { list-style: none; margin: 0 0 var(--s4); padding: 0; display: grid; gap: var(--s3); }
+    .grupos li {
+      border-left: 2px solid var(--accent); padding-left: var(--s4);
+      font-size: .95rem; display: grid; gap: 2px;
+    }
+    .grupos span { color: var(--ink-soft); font-size: .9rem; }
+    .obs { margin-top: var(--s4); font-size: .9rem; color: var(--ink-soft); }
+    .band p .btn { margin-right: var(--s2); margin-bottom: var(--s2); }
+  </style>
+</Base>

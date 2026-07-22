@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+
+const title = 'Privacidade e termos de uso | Acolhimento';
+const description =
+  'Este portal não pede cadastro, não usa cookie de rastreamento, não exibe anúncio ' +
+  'e não guarda a sua localização. Entenda como funciona.';
+---
+<Base title={title} description={description}>
+  <section class="band band--intro">
+    <div class="container narrow">
+      <p class="crumbs"><a href="/">Início</a> › Privacidade e termos</p>
+      <p class="eyebrow eyebrow--left">Privacidade e termos de uso</p>
+      <h1>O que a gente não faz com você</h1>
+      <p class="lede">
+        A maioria das políticas de privacidade existe para explicar o que o site
+        coleta. Esta existe para dizer que ele não coleta. Escrevemos curto e em
+        português claro de propósito, porque texto genérico de gerador promete
+        tratar dados que nós não tratamos.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Nós não</h2>
+      <ul class="nots">
+        <li><strong>Não pedimos cadastro.</strong> Não há login, conta, nome, e-mail nem telefone. Nada para preencher.</li>
+        <li><strong>Não usamos cookie de rastreamento.</strong> Nenhum pixel, nenhum rastreador de terceiro, nenhuma rede de anúncio.</li>
+        <li><strong>Não exibimos anúncio.</strong> Nenhum, em lugar nenhum, nunca.</li>
+        <li><strong>Não vendemos nada</strong> e não recebemos por encaminhamento. Nenhuma clínica paga para aparecer aqui, nem poderia: só listamos o que é gratuito.</li>
+        <li><strong>Não guardamos a sua localização.</strong> Se você usar o botão “perto de mim”, a coordenada é processada dentro do seu navegador para calcular distâncias. Ela não é enviada para nós nem para ninguém.</li>
+        <li><strong>Não compartilhamos dado seu com ninguém</strong>, porque não temos dado seu.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>O que existe</h2>
+      <p>
+        O site é um conjunto de páginas estáticas servido pela Cloudflare. Como
+        qualquer site na internet, o servidor que entrega as páginas registra
+        dados técnicos de acesso (endereço IP, navegador, página pedida) para
+        funcionar e se defender de abuso. Esse registro é do provedor de
+        hospedagem, segue a política dele, e nós não o consultamos, não o
+        exportamos e não o cruzamos com nada.
+      </p>
+      <p>
+        A sua preferência de tema (claro ou escuro) fica salva no seu próprio
+        navegador, em <code>localStorage</code>. Ela nunca sai do seu aparelho.
+      </p>
+      <p>
+        Os mapas usam imagens do OpenStreetMap. Ao abrir um mapa, o seu navegador
+        pede essas imagens diretamente ao servidor deles, que enxerga o seu IP,
+        como acontece com qualquer imagem carregada de outro site. Por isso o
+        mapa só carrega quando você clica, e não antes.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Termos de uso</h2>
+      <p>
+        Este portal é <strong>informativo</strong>. Ele reúne e organiza dados que
+        órgãos públicos e irmandades já publicam, com a fonte e a data da coleta
+        declaradas em cada página.
+      </p>
+      <p>
+        Ele <strong>não presta atendimento, não faz diagnóstico e não indica
+        tratamento</strong>. Nada aqui substitui a avaliação de um profissional de
+        saúde. Em emergência, ligue <a href="tel:192">192</a>. Para apoio emocional,
+        <a href="tel:188">188</a>, 24 horas e gratuito.
+      </p>
+      <p>
+        Endereços, telefones e horários mudam, e as bases oficiais nem sempre
+        acompanham. Por isso pedimos que você confirme por telefone antes de se
+        deslocar. Fazemos o possível para manter tudo atualizado, mas não podemos
+        garantir que cada registro esteja correto no momento em que você o lê.
+      </p>
+      <p>
+        Se algum dado estiver errado, escreva para
+        <a href="mailto:contato@acolhimento.org">contato@acolhimento.org</a>.
+        <strong>Corrigimos ou removemos qualquer registro mediante aviso.</strong>
+        Se você representa um grupo de mútua ajuda e prefere que ele não apareça
+        aqui, é só pedir, e retiramos sem questionar.
+      </p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>Independência</h2>
+      <p>
+        O Acolhimento não tem vínculo, convênio, patrocínio ou endosso do
+        Ministério da Saúde, do SUS, de Narcóticos Anônimos ou de Alcoólicos
+        Anônimos. Citamos essas instituições apenas para identificar os serviços e
+        a origem dos dados, e não usamos logotipo nem marca de nenhuma delas.
+      </p>
+      <p>
+        O projeto é mantido por conta própria, sem fins lucrativos e sem receber
+        dinheiro de ninguém. O código é aberto e pode ser auditado por qualquer
+        pessoa. <a href="/sobre/">Veja como funciona e de onde vêm os dados</a>.
+      </p>
+      <p class="stamp">Última atualização desta página: julho de 2026</p>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s7); }
+    .narrow { max-width: 68ch; }
+    .lede { font-size: 1.02rem; }
+    .narrow h2 { margin-bottom: var(--s4); }
+
+    .nots { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s3); }
+    .nots li {
+      background: var(--surface); border-radius: var(--radius-sm);
+      padding: var(--s3) var(--s4); font-size: .93rem;
+    }
+    code {
+      background: var(--surface-2); border-radius: 5px;
+      padding: 1px 6px; font-size: .88em;
+    }
+    .stamp { margin-top: var(--s6); font-size: .84rem; color: var(--ink-soft); }
+  </style>
+</Base>

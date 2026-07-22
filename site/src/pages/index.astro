@@ -1,0 +1,326 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.vue';
+import BrazilMap from '../components/BrazilMap.astro';
+import Icon from '../components/Icon.astro';
+import Embrace from '../components/Embrace.astro';
+import { services, cities } from '../lib/data';
+
+const counts = {
+  capsAd: services.filter((s) => s.kind === 'caps_ad').length,
+  caps: services.filter((s) => s.kind === 'caps').length,
+  na: services.filter((s) => s.kind === 'na').length,
+};
+const total = services.length.toLocaleString('pt-BR');
+const bigCities = [...cities].sort((a, b) => b.total - a.total).slice(0, 12);
+
+const title = 'Acolhimento: onde buscar ajuda gratuita para dependência química e alcoolismo';
+const description =
+  'Encontre CAPS AD, CAPS e grupos de Narcóticos Anônimos perto de você. ' +
+  'Busca gratuita e sem fins comerciais, com dados oficiais do SUS e das irmandades de apoio.';
+---
+<Base title={title} description={description}>
+  <section class="hero" aria-labelledby="titulo">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow eyebrow--left">Álcool e outras drogas</p>
+        <h1 id="titulo">Ajuda gratuita perto de você, sem cadastro e sem julgamento.</h1>
+        <p class="lede">
+          Procurar ajuda é o passo mais difícil, e você acabou de dar. Agora é só
+          achar onde: reunimos os serviços do SUS e os grupos de apoio de todo o
+          Brasil, para você ou para quem você ama.
+        </p>
+        <SearchBox client:load />
+        <ul class="promise">
+          <li>Sem cadastro</li>
+          <li>Sem custo</li>
+          <li>Sem venda de nada</li>
+        </ul>
+      </div>
+      <div class="hero-media">
+        <BrazilMap />
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--soft" aria-labelledby="passos">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Por onde começar</p>
+        <h2 id="passos">Quatro caminhos, conforme o seu momento</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="step-n">01</span>
+          <div>
+            <strong>É uma emergência?</strong>
+            <p>Risco de vida ou overdose: ligue <a href="tel:192">192</a> agora.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-n">02</span>
+          <div>
+            <strong>Quer só conversar?</strong>
+            <p>O CVV atende no <a href="tel:188">188</a>, 24 horas, sem julgamento.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-n">03</span>
+          <div>
+            <strong>Busca tratamento?</strong>
+            <p>Procure o CAPS AD da sua cidade. É do SUS e não precisa de encaminhamento.</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-n">04</span>
+          <div>
+            <strong>Quer apoio de quem já passou por isso?</strong>
+            <p>As reuniões de NA são gratuitas e abertas. Basta chegar.</p>
+          </div>
+        </li>
+      </ol>
+      <p class="steps-more">
+        Primeira vez? Os nossos guias explicam <a href="/guia/o-que-esperar/">o que
+        esperar</a>, <a href="/guia/direitos/">os seus direitos</a>,
+        <a href="/guia/perguntas/">que perguntas fazer</a> e
+        <a href="/guia/familia/">como ajudar um familiar</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="oque">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">O que você encontra</p>
+        <h2 id="oque">Serviços gratuitos, do SUS aos grupos de apoio</h2>
+        <p>Cada tipo cumpre um papel diferente no cuidado. Todos são de graça.</p>
+      </div>
+      <div class="grid">
+        <article class="card tone-sus">
+          <div class="c-icon"><Icon kind="caps_ad" size={22} /></div>
+          <p class="c-n">{counts.capsAd}</p>
+          <h3>CAPS AD</h3>
+          <p class="c-d">
+            Centros do SUS especializados em álcool e outras drogas, com equipe de
+            saúde completa. Porta aberta: chegue sem encaminhamento.
+          </p>
+        </article>
+        <article class="card tone-sus">
+          <div class="c-icon"><Icon kind="caps" size={22} /></div>
+          <p class="c-n">{counts.caps}</p>
+          <h3>CAPS</h3>
+          <p class="c-d">
+            Centros de Atenção Psicossocial. Nas cidades sem CAPS AD, são a porta
+            de entrada certa para o cuidado com álcool e drogas.
+          </p>
+        </article>
+        <article class="card tone-support">
+          <div class="c-icon"><Icon kind="na" size={22} /></div>
+          <p class="c-n">{counts.na}</p>
+          <h3>Grupos de NA</h3>
+          <p class="c-d">
+            Reuniões de Narcóticos Anônimos, presenciais e online, em todo o país.
+            Ninguém pergunta nada, ninguém paga nada.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--dark" aria-labelledby="quem">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Para quem é</p>
+        <h2 id="quem">Se você chegou até aqui, já deu o passo mais difícil</h2>
+      </div>
+      <div class="audience">
+        <article class="aud">
+          <span class="aud-art"><Embrace motif="amparo" size={56} /></span>
+          <h3>Para você</h3>
+          <p>
+            Se você usa e quer parar, ou só quer entender que opções existem, sem
+            compromisso e sem ninguém te julgando.
+          </p>
+        </article>
+        <article class="aud">
+          <span class="aud-art"><Embrace motif="junto" size={56} /></span>
+          <h3>Para a sua família</h3>
+          <p>
+            Se você é pai, mãe, filho, irmão ou amigo de alguém que precisa de
+            ajuda e não sabe por onde começar.
+          </p>
+        </article>
+        <article class="aud">
+          <span class="aud-art"><Embrace motif="retorno" size={56} /></span>
+          <h3>Para quem já tentou</h3>
+          <p>
+            Nenhum serviço aqui exige que você chegue no fundo do poço, e nenhum
+            vai te cobrar explicação por ter tentado antes. A porta continua
+            aberta, sempre.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--soft" aria-labelledby="porque">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Por que existimos</p>
+        <h2 id="porque">A ajuda existe. Achar ela é que é o problema.</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-text">
+          <p>
+            Quando alguém decide pedir ajuda, essa janela pode durar pouco. E é
+            justamente aí que o Brasil complica: a informação existe, mas está
+            espalhada entre o cadastro do Ministério da Saúde, os sites de cada
+            irmandade e listas em PDF do governo, cada uma num canto.
+          </p>
+          <p>
+            Pior: quem digita “ajuda para dependência química” no Google encontra
+            primeiro <strong>anúncios de clínicas que vendem internação</strong>.
+            O tratamento no SUS é gratuito, e muitas vezes existe a poucos
+            quilômetros de casa, mas quase nunca aparece primeiro.
+          </p>
+          <p>
+            O Acolhimento junta essas fontes, atualiza sozinho e mostra de forma
+            simples. <strong>Só entra aqui o que é gratuito.</strong> Não recebemos
+            de clínica nenhuma e não ganhamos nada se você procurar um serviço,
+            porque essa é exatamente a distorção que queremos corrigir.
+          </p>
+        </div>
+        <ul class="pledges">
+          <li>
+            <span class="pl-i"><Icon kind="caps_ad" size={18} /></span>
+            <div>
+              <strong>Só fontes oficiais</strong>
+              <p>CNES do Ministério da Saúde e diretório do NA Brasil, atualizados toda semana.</p>
+            </div>
+          </li>
+          <li>
+            <span class="pl-i"><Icon kind="na" size={18} /></span>
+            <div>
+              <strong>Zero interesse comercial</strong>
+              <p>Nenhum anúncio, nenhum lead vendido, nenhuma clínica paga para aparecer.</p>
+            </div>
+          </li>
+          <li>
+            <span class="pl-i"><Icon kind="alanon" size={18} /></span>
+            <div>
+              <strong>Transparência e privacidade</strong>
+              <p>Cada página mostra a fonte e a data da coleta. Não pedimos cadastro.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="cidades">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Comece pela sua cidade</p>
+        <h2 id="cidades">Cidades com mais serviços mapeados</h2>
+      </div>
+      <ul class="citylist">
+        {bigCities.map((c) => (
+          <li>
+            <a href={`/${c.state.toLowerCase()}/${c.slug}/`}>
+              {c.city}<span class="uf">/{c.state}</span><span class="n">{c.total}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="citylist-more">
+        Não achou a sua? <a href="/">Busque pelo nome no campo acima</a> ou
+        <a href="/buscar/">use a sua localização</a>.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    /* Hero em duas colunas, como na referência: texto à esquerda, painel à direita */
+    .hero { padding: var(--s7) 0 var(--s8); }
+    .hero-grid { display: grid; gap: var(--s6); align-items: center; }
+    .lede { font-size: 1.05rem; max-width: 40ch; margin-bottom: var(--s5); }
+
+    .promise { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); margin: var(--s5) 0 0; padding: 0; list-style: none; }
+    .promise li {
+      font-size: .78rem; font-weight: 600; color: var(--ink);
+      display: inline-flex; align-items: center; gap: var(--s2);
+    }
+    .promise li::before {
+      content: ""; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent); flex: none;
+    }
+
+    .why-grid { display: grid; gap: var(--s6); align-items: start; }
+    .why-text p:last-child { margin-bottom: 0; }
+
+    .pledges { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); }
+    .pledges li { display: flex; gap: var(--s3); align-items: flex-start; }
+    .pl-i {
+      width: 38px; height: 38px; flex: none; border-radius: 50%;
+      background: var(--surface); color: var(--primary);
+      display: grid; place-items: center;
+    }
+    .pledges strong { display: block; font-size: .95rem; color: var(--ink); }
+    .pledges p { margin: 0; font-size: .86rem; color: var(--ink-soft); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s4); }
+    .c-icon { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; margin-bottom: var(--s4); }
+    .tone-sus .c-icon { background: var(--primary-soft); color: var(--primary-ink); }
+    .tone-support .c-icon { background: var(--support-soft); color: var(--support); }
+    .c-n {
+      font-size: 2rem; font-weight: 700; line-height: 1; color: var(--ink);
+      letter-spacing: -.03em; margin: 0 0 var(--s1); font-variant-numeric: tabular-nums;
+    }
+    .grid h3 { margin: 0 0 var(--s3); }
+    .c-d { margin: 0; font-size: .89rem; }
+
+    .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+    .steps li {
+      display: flex; gap: var(--s4); align-items: flex-start;
+      background: var(--surface); border-radius: var(--radius); padding: var(--s5);
+    }
+    .step-n {
+      flex: none; font-size: .8rem; font-weight: 700; color: var(--accent-ink);
+      letter-spacing: .04em; padding-top: 2px;
+    }
+    .steps strong { display: block; font-size: 1rem; color: var(--ink); margin-bottom: 2px; }
+    .steps p { margin: 0; font-size: .88rem; }
+    .steps-more { text-align: center; margin: var(--s5) 0 0; font-size: .92rem; color: var(--ink-soft); }
+
+    .audience { display: grid; gap: var(--s5); }
+    .aud { opacity: .96; }
+    /* A cor vai no wrapper, não no componente: class passada como prop cai fora
+       do escopo do CSS do index, então a regra nunca casaria com o <svg>.
+       O traço usa currentColor, então herda daqui. */
+    .aud-art { display: block; color: var(--accent); margin-bottom: var(--s4); }
+    .aud h3 { margin: 0 0 var(--s2); font-size: 1.1rem; }
+    .aud p { margin: 0; font-size: .9rem; }
+
+    .citylist { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2); padding: 0; list-style: none; margin: 0; }
+    .citylist a {
+      display: inline-flex; align-items: center; gap: var(--s2);
+      background: var(--surface); border: 1px solid var(--line); border-radius: 100px;
+      padding: var(--s2) var(--s4); text-decoration: none; color: var(--ink);
+      font-size: .88rem; min-height: 42px;
+    }
+    .citylist a:hover { border-color: var(--primary); background: var(--primary-soft); }
+    .uf { color: var(--ink-soft); }
+    .n {
+      font-size: .72rem; color: var(--ink-soft); background: var(--surface-2);
+      border-radius: 100px; padding: 0 7px; font-variant-numeric: tabular-nums;
+    }
+    .citylist-more { text-align: center; margin: var(--s5) 0 0; font-size: .86rem; }
+
+    @media (min-width: 860px) {
+      .hero-grid { grid-template-columns: 1.05fr .95fr; gap: var(--s7); }
+      .why-grid { grid-template-columns: 1.4fr 1fr; gap: var(--s7); }
+      .audience { grid-template-columns: repeat(3, 1fr); }
+      .steps { grid-template-columns: 1fr 1fr; gap: var(--s4); }
+    }
+  </style>
+</Base>

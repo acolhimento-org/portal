@@ -1,0 +1,63 @@
+---
+// Seletor de tema: claro ou escuro, só isso.
+//
+// Antes havia um terceiro estado, "automático", e ele confundia: com o sistema
+// no escuro, "automático" e "escuro" pintam a tela igual, então o clique parecia
+// não fazer nada e era preciso clicar duas vezes para chegar no claro.
+// O comportamento automático continua existindo, mas como padrão silencioso de
+// quem nunca escolheu, não como opção no ciclo.
+---
+<button class="theme" data-theme-toggle type="button">
+  <svg class="i-light" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="4.4" fill="currentColor"/>
+    <path d="M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.3 5.3l1.9 1.9M16.8 16.8l1.9 1.9M18.7 5.3l-1.9 1.9M7.2 16.8l-1.9 1.9"
+      fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+  </svg>
+  <svg class="i-dark" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M20 14.4A8.6 8.6 0 0 1 9.6 4a8.6 8.6 0 1 0 10.4 10.4z" fill="currentColor"/>
+  </svg>
+  <span class="theme-label" data-theme-label>Tema</span>
+</button>
+
+<script>
+  const btn = document.querySelector('[data-theme-toggle]');
+  const label = document.querySelector('[data-theme-label]');
+  const NOMES = { light: 'Claro', dark: 'Escuro' };
+
+  function aplicar(tema) {
+    document.documentElement.dataset.theme = tema;
+    label.textContent = NOMES[tema];
+    const proximo = tema === 'dark' ? 'light' : 'dark';
+    btn.setAttribute('aria-label', `Tema ${NOMES[tema].toLowerCase()}. Mudar para ${NOMES[proximo].toLowerCase()}.`);
+  }
+
+  // Padrao claro: sem escolha salva, o site abre no tema claro.
+  aplicar(localStorage.getItem('tema') === 'dark' ? 'dark' : 'light');
+
+  btn.addEventListener('click', () => {
+    const proximo = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('tema', proximo);
+    aplicar(proximo);
+  });
+</script>
+
+<style>
+  .theme {
+    display: inline-flex; align-items: center; gap: var(--s2);
+    min-height: 40px; padding: var(--s1) var(--s3);
+    background: transparent; color: var(--ink-soft);
+    border: 1px solid var(--line); border-radius: 100px;
+    font: inherit; font-size: .85rem; cursor: pointer;
+  }
+  .theme:hover { border-color: var(--primary); color: var(--ink); }
+  .theme svg { display: none; }
+  :global(html[data-theme='light']) .theme .i-light,
+  :global(html[data-theme='dark']) .theme .i-dark { display: block; }
+  /* Sem JS o botão não faz nada, então não vale ocupar espaço */
+  :global(html:not([data-theme])) .theme { display: none; }
+
+  @media (max-width: 560px) {
+    .theme-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .theme { padding-inline: var(--s2); }
+  }
+</style>

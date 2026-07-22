@@ -1,0 +1,203 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { services, KINDS, SOURCE_LABELS, formatDate } from '../../lib/data';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { id: s.id }, props: { service: s } }));
+}
+
+const { service: s } = Astro.props;
+const meta = KINDS[s.kind];
+const source = SOURCE_LABELS[s.source];
+const isSus = ['caps_ad', 'caps', 'raps_outro'].includes(s.kind);
+const family = s.audience === 'familia';
+const tone = family ? 'family' : ['na', 'aa'].includes(s.kind) ? 'support' : 'sus';
+const mapsUrl = s.lat != null
+  ? `https://www.openstreetmap.org/?mlat=${s.lat}&mlon=${s.lng}#map=17/${s.lat}/${s.lng}`
+  : null;
+
+const title = `${s.name}, ${s.city}/${s.state} | ${meta.short} gratuito`;
+const description =
+  `${s.name}: ${meta.short.toLowerCase()} em ${s.city}/${s.state}. ` +
+  `${s.address ? `Endereço: ${s.address}. ` : ''}${meta.freeLabel}.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': isSus ? 'MedicalClinic' : 'Organization',
+  name: s.name,
+  description: meta.label,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: s.address ?? undefined,
+    addressLocality: s.city,
+    addressRegion: s.state,
+    addressCountry: 'BR',
+  },
+  ...(s.lat != null && { geo: { '@type': 'GeoCoordinates', latitude: s.lat, longitude: s.lng } }),
+  ...(s.phones.length && { telephone: s.phones[0] }),
+  isAccessibleForFree: true,
+};
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <div class="container">
+    <p class="crumbs">
+      <a href="/">Início</a> ›
+      <a href={`/${s.state.toLowerCase()}/${s.city_slug}/`}>{s.city}/{s.state}</a> › {s.name}
+    </p>
+
+    <header class={`head tone-${tone}`}>
+      <div class="head-icon"><Icon kind={s.kind} size={26} /></div>
+      <div>
+        <p class="kind">{meta.label}</p>
+        <h1>{s.name}</h1>
+      </div>
+    </header>
+
+    <div class="facts card">
+      {s.address && (
+        <p class="fact">
+          <span class="fact-k">Endereço</span>
+          <span>{s.address}{s.neighborhood ? `, ${s.neighborhood}` : ''}, {s.city}/{s.state}</span>
+        </p>
+      )}
+      {!s.address && (
+        <p class="fact">
+          <span class="fact-k">Local</span>
+          <span>{s.city}/{s.state}{s.online ? ' · reunião online' : ''}</span>
+        </p>
+      )}
+      {s.phones.length > 0 && (
+        <p class="fact">
+          <span class="fact-k">Telefone</span>
+          <span>{s.phones.map((p) => <a href={`tel:${p.replace(/\D/g, '')}`}>{p}</a>)}</span>
+        </p>
+      )}
+      {s.email && (
+        <p class="fact">
+          <span class="fact-k">E-mail</span>
+          <span><a href={`mailto:${s.email}`}>{s.email}</a></span>
+        </p>
+      )}
+      {s.hours && (
+        <p class="fact">
+          <span class="fact-k">Horário</span>
+          <span>
+            {s.open_24h
+              ? <strong class="h24">Aberto 24 horas, todos os dias (inclusive fins de semana e feriados)</strong>
+              : s.hours}
+          </span>
+        </p>
+      )}
+      {s.schedule.length > 0 && (
+        <p class="fact">
+          <span class="fact-k">Reuniões</span>
+          <span class="slots">
+            {s.schedule.map((h) => (
+              <span class="slot">
+                {h.weekday} {h.time}
+                {h.open === true && <em class="slot-open"> · aberta</em>}
+                {h.open === false && <em class="slot-open"> · fechada</em>}
+              </span>
+            ))}
+          </span>
+        </p>
+      )}
+      <p class="fact">
+        <span class="fact-k">Verificado em</span>
+        <span class="checked">
+          {formatDate(s.source_updated_at)}
+          <span class="checked-src">segundo o {s.source === 'cnes' ? 'CNES' : 'diretório do NA'}</span>
+        </span>
+      </p>
+      {s.directions && (
+        <p class="fact">
+          <span class="fact-k">Referência</span>
+          <span>{s.directions}</span>
+        </p>
+      )}
+      {(s.open_meeting !== null || s.wheelchair || s.holidays || s.court_card) && (
+        <p class="fact">
+          <span class="fact-k">Detalhes</span>
+          <span class="traits">
+            {s.open_meeting === true && <span class="trait trait-open">Reuniões abertas: familiares e interessados são bem-vindos</span>}
+            {s.open_meeting === false && <span class="trait">Reuniões fechadas: somente para quem tem o problema com drogas</span>}
+            {s.wheelchair && <span class="trait">Acesso a cadeirantes</span>}
+            {s.holidays && <span class="trait">Funciona em feriados</span>}
+            {s.court_card && <span class="trait">Fornece comprovante de presença (Justiça)</span>}
+          </span>
+        </p>
+      )}
+      <p class="cta">
+        {s.phones.length > 0 && (
+          <a class="btn" href={`tel:${s.phones[0].replace(/\D/g, '')}`}>Ligar agora</a>
+        )}
+        {mapsUrl && <a class="btn secondary" href={mapsUrl} rel="noopener">Como chegar</a>}
+      </p>
+    </div>
+
+    {s.description && <p class="desc">{s.description}</p>}
+
+    {isSus && (
+      <div class="card note">
+        <h2>Como funciona o atendimento</h2>
+        <p>
+          Serviço <strong>público e gratuito do SUS</strong>, de "porta aberta": você
+          (ou seu familiar) pode ir diretamente, sem encaminhamento e sem agendar.
+          Leve um documento, se tiver, mas a falta dele não impede o acolhimento.
+        </p>
+      </div>
+    )}
+    {['na', 'aa'].includes(s.kind) && (
+      <div class="card note">
+        <h2>Como participar</h2>
+        <p>
+          É só chegar no horário da reunião. Não precisa se inscrever, não paga nada e
+          ninguém é obrigado a falar. Reuniões "abertas" também recebem familiares.
+        </p>
+      </div>
+    )}
+
+    <div class="source-note">
+      Fonte: <a href={source.url} rel="noopener">{source.name}</a>.
+      Telefones e horários podem mudar, então confirme antes de se deslocar.
+      Encontrou um erro? <a href="/sobre/#correcao">Avise a gente e corrigimos</a>.
+    </div>
+  </div>
+
+  <style>
+    .head { display: flex; gap: var(--s3); align-items: flex-start; margin-bottom: var(--s5); }
+    .head-icon { width: 48px; height: 48px; flex: none; border-radius: 12px; display: grid; place-items: center; }
+    .tone-sus .head-icon { background: var(--primary-soft); color: var(--primary-ink); }
+    .tone-support .head-icon { background: var(--support-soft); color: var(--support); }
+    .tone-family .head-icon { background: var(--family-soft); color: var(--family); }
+    .kind { font-size: .8rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 var(--s1); }
+    .head h1 { margin: 0; }
+
+    .facts { padding: var(--s5); }
+    .fact { display: grid; gap: var(--s1); margin: 0 0 var(--s4); }
+    .fact-k { font-size: .76rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); }
+    .slots { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); }
+    .slot {
+      font-size: .82rem; font-variant-numeric: tabular-nums;
+      background: var(--surface-2); border-radius: 6px; padding: 2px 8px;
+    }
+    .h24 { color: var(--accent-ink); }
+    .slot-open { font-style: normal; color: var(--ink-soft); font-size: .9em; }
+    .traits { display: flex; flex-direction: column; gap: var(--s1); }
+    .trait { font-size: .9rem; }
+    .trait-open { color: var(--primary-ink); font-weight: 600; }
+    .checked { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s2); }
+    .checked-src { font-size: .78rem; color: var(--ink-soft); }
+    .cta { display: flex; flex-wrap: wrap; gap: var(--s2); margin: var(--s5) 0 0; }
+
+    .desc { color: var(--ink-soft); white-space: pre-line; margin: var(--s5) 0; max-width: 46em; }
+    .note { margin-top: var(--s4); }
+    .note h2 { margin: 0 0 var(--s2); font-size: 1.05rem; }
+    .note p { margin: 0; color: var(--ink-soft); }
+
+    @media (min-width: 640px) {
+      .fact { grid-template-columns: 120px 1fr; gap: var(--s3); align-items: baseline; }
+    }
+  </style>
+</Base>

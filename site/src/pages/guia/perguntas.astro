@@ -1,0 +1,112 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const title = 'Perguntas para fazer ao ligar ou visitar um serviço | Acolhimento';
+const description =
+  'Nove perguntas úteis para levar quando você ligar para um CAPS ou visitar um ' +
+  'serviço, adaptadas de guias internacionais ao contexto do SUS.';
+
+const perguntas = [
+  {
+    q: 'Preciso agendar ou posso ir direto?',
+    why: 'CAPS são de porta aberta, mas saber o melhor horário do acolhimento evita viagem em vão.',
+  },
+  {
+    q: 'Qual o horário de funcionamento? E fim de semana?',
+    why: 'Alguns CAPS AD funcionam 24 horas; a maioria funciona em horário comercial. Aqui no site o horário aparece na página de cada serviço.',
+  },
+  {
+    q: 'O que devo levar na primeira vez?',
+    why: 'Em geral basta um documento, se tiver. Confirmar evita ansiedade desnecessária.',
+  },
+  {
+    q: 'Como funciona o acolhimento inicial? Quanto tempo leva?',
+    why: 'Saber que a primeira conversa é uma escuta, e não um julgamento, muda a disposição de ir.',
+  },
+  {
+    q: 'Vocês atendem também a família? Ela pode participar?',
+    why: 'Muitos CAPS têm grupos de família. Se quem liga é um familiar, essa pergunta abre a porta certa.',
+  },
+  {
+    q: 'E se a pessoa também tiver depressão, ansiedade ou outra questão de saúde?',
+    why: 'Condições que andam juntas são comuns, e o serviço deve cuidar do conjunto ou encaminhar.',
+  },
+  {
+    q: 'O que acontece se houver recaída durante o tratamento?',
+    why: 'A resposta certa é acolher e ajustar o cuidado, nunca expulsar. Vale ouvir isso do próprio serviço.',
+  },
+  {
+    q: 'Que apoio existe depois da fase mais intensa do tratamento?',
+    why: 'Continuidade importa: grupos, retornos, articulação com NA e AA.',
+  },
+  {
+    q: 'Existe fila? Se houver, o que dá para fazer enquanto espero?',
+    why: 'Se houver espera, reuniões de NA e AA são gratuitas, imediatas e não têm fila.',
+  },
+];
+---
+<Base title={title} description={description}>
+  <section class="band band--intro">
+    <div class="container narrow">
+      <p class="crumbs"><a href="/">Início</a> › <a href="/guia/">Guias</a> › Perguntas</p>
+      <p class="eyebrow eyebrow--left">Guia</p>
+      <h1>Nove perguntas para levar com você</h1>
+      <p class="lede">
+        Ligar para um serviço de saúde sem saber o que perguntar é normal, ninguém
+        ensina isso. Esta lista foi adaptada de guias internacionais (NIDA e NIAAA,
+        dos EUA) para o contexto do SUS. Não precisa fazer todas: leve as que
+        servem para o seu caso.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <ol class="qs">
+        {perguntas.map((p, i) => (
+          <li>
+            <span class="q-n">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <strong>{p.q}</strong>
+              <p>{p.why}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="obs">
+        Dica prática: antes de ligar, tenha à mão as informações básicas de quem
+        precisa da ajuda (idade, cidade, desde quando a situação preocupa). Isso
+        torna a conversa mais rápida e o encaminhamento mais certeiro.
+      </p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>Próximos passos</h2>
+      <p>
+        <a class="btn" href="/buscar/">Achar um serviço perto de você</a>
+        <a class="btn secondary" href="/guia/o-que-esperar/">Ver como funciona a primeira vez</a>
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s7); }
+    .narrow { max-width: 72ch; }
+    .lede { font-size: 1.02rem; }
+    .qs { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+    .qs li {
+      display: flex; gap: var(--s4); align-items: flex-start;
+      background: var(--surface); border-radius: var(--radius); padding: var(--s4) var(--s5);
+    }
+    .q-n {
+      flex: none; font-size: .8rem; font-weight: 700; color: var(--accent-ink);
+      letter-spacing: .04em; padding-top: 2px;
+    }
+    .qs strong { display: block; font-size: 1rem; color: var(--ink); margin-bottom: 2px; }
+    .qs p { margin: 0; font-size: .9rem; color: var(--ink-soft); }
+    .obs { margin-top: var(--s5); font-size: .9rem; color: var(--ink-soft); }
+    .band h2 + p .btn { margin-right: var(--s2); }
+  </style>
+</Base>

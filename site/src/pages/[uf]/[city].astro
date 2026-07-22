@@ -1,0 +1,319 @@
+---
+import Base from '../../layouts/Base.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import Icon from '../../components/Icon.astro';
+import { cities, servicesInCity, KINDS, formatDate } from '../../lib/data';
+
+export function getStaticPaths() {
+  return cities.map((c) => ({
+    params: { uf: c.state.toLowerCase(), city: c.slug },
+    props: { cityName: c.city, state: c.state },
+  }));
+}
+
+const { city } = Astro.params;
+const { cityName, state } = Astro.props;
+const all = servicesInCity(state, city!);
+
+const order = ['caps_ad', 'caps', 'raps_outro', 'na', 'aa', 'alanon'];
+const groups = order
+  .map((kind) => ({ kind, meta: KINDS[kind], items: all.filter((s) => s.kind === kind) }))
+  .filter((g) => g.items.length > 0);
+
+const neighborhoods = [...new Set(all.map((s) => s.neighborhood).filter(Boolean))].sort(
+  (a, b) => a!.localeCompare(b!, 'pt-BR'),
+);
+const showNeighborhoodFilter = neighborhoods.length > 4;
+// O mapa lê as coordenadas dos próprios cards (data-lat/data-lng), então não
+// serializamos os pontos no HTML, o que economiza ~42KB numa cidade como São Paulo.
+const mappable = all.filter((s) => s.lat != null && s.lng != null).length;
+
+const count24h = all.filter((s) => s.open_24h).length;
+
+// A data de extracao e a defesa mais forte contra alegacao de negligencia:
+// transforma "informacao errada" em "retrato fiel da base oficial numa data".
+const coletadoEm = all.reduce((max, s) => (s.source_updated_at > max ? s.source_updated_at : max), '');
+
+const title = `Ajuda gratuita para álcool e drogas em ${cityName} (${state}): CAPS e grupos de apoio`;
+const description =
+  `${all.length} serviços gratuitos em ${cityName}/${state} para dependência química e alcoolismo: ` +
+  groups.map((g) => `${g.items.length} ${g.meta.short}`).join(', ') +
+  '. Endereços, telefones e horários, sem fins comerciais.';
+---
+<Base title={title} description={description}>
+  <div class="container">
+    <p class="crumbs"><a href="/">Início</a> › {state} › {cityName}</p>
+    <h1>Onde buscar ajuda em {cityName}/{state}</h1>
+    <p class="intro">
+      {all.length} {all.length === 1 ? 'serviço gratuito' : 'serviços gratuitos'}.
+      Nos serviços do SUS não é preciso encaminhamento; nos grupos de apoio, basta
+      chegar no horário da reunião.
+    </p>
+
+    {mappable > 1 && (
+      <div class="citymap">
+        <button class="btn secondary" data-map-toggle aria-expanded="false">
+          <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="12" cy="10" r="2.4" fill="currentColor"/>
+          </svg>
+          <span data-map-label>Ver no mapa</span>
+        </button>
+        <div class="map" data-map hidden role="img" aria-label={`Mapa dos serviços em ${cityName}`}></div>
+      </div>
+    )}
+
+    <div class="filters" data-filters>
+      <div class="chips" role="group" aria-label="Filtrar por tipo de serviço">
+        <button class="chip is-on" data-filter-kind="all" aria-pressed="true">
+          Todos <span class="c">{all.length}</span>
+        </button>
+        {groups.map((g) => (
+          <button class="chip" data-filter-kind={g.kind} aria-pressed="false">
+            <Icon kind={g.kind} size={15} />
+            {g.meta.short} <span class="c">{g.items.length}</span>
+          </button>
+        ))}
+      </div>
+
+      {count24h > 0 && (
+        <button class="chip chip-24h" data-filter-24h aria-pressed="false">
+          Aberto 24h <span class="c">{count24h}</span>
+        </button>
+      )}
+
+      {showNeighborhoodFilter && (
+        <label class="nb-filter">
+          <span>Bairro</span>
+          <select data-filter-nb>
+            <option value="all">Todos os bairros</option>
+            {neighborhoods.map((n) => <option value={n}>{n}</option>)}
+          </select>
+        </label>
+      )}
+    </div>
+
+    <p class="count" data-count hidden aria-live="polite"></p>
+
+    {groups.map((g) => (
+      <section data-group={g.kind}>
+        <h2 id={g.meta.slug}>
+          {g.meta.label}
+          <span class="h2-count">{g.items.length} em {cityName}</span>
+        </h2>
+        <div class="stack">
+          {g.items.map((s) => <ServiceCard service={s} featured={g.kind === 'caps_ad'} />)}
+        </div>
+      </section>
+    ))}
+
+    <p class="empty" data-empty hidden>
+      Nenhum serviço com esses filtros. <button class="linkish" data-reset>Limpar filtros</button>
+    </p>
+
+    <div class="source-note">
+      Dados do <a href="https://cnes.datasus.gov.br" rel="noopener">CNES/Ministério da Saúde</a>
+      e do <a href="https://www.na.org.br/grupo" rel="noopener">diretório do NA Brasil</a>,
+      coletados em {formatDate(coletadoEm)}. Telefones e horários podem mudar.
+      Se puder, confirme antes de se deslocar.
+      Encontrou um erro? <a href="/sobre/#correcao">Avise a gente e corrigimos</a>.
+    </div>
+  </div>
+
+  <script>
+    // Filtro e mapa em JS puro. Sem JS a página mostra tudo (SEO e utilidade intactos).
+    // O mapa lê lat/lng dos cards, então só plota o que o filtro deixou visível.
+    const root = document.querySelector('[data-filters]');
+    if (root) {
+      const chips = [...root.querySelectorAll('[data-filter-kind]')];
+      const nbSelect = root.querySelector('[data-filter-nb]');
+      const cards = [...document.querySelectorAll('.svc')];
+      const groups = [...document.querySelectorAll('[data-group]')];
+      const countEl = document.querySelector('[data-count]');
+      const emptyEl = document.querySelector('[data-empty]');
+      let kind = 'all';
+      let only24h = false;
+
+      // A cor do marcador vem do CSS, então acompanha o tema claro/escuro
+      const SUS = new Set(['caps_ad', 'caps', 'raps_outro']);
+      function toneColor(kind) {
+        const css = getComputedStyle(document.documentElement);
+        const token = SUS.has(kind) ? '--primary' : kind === 'alanon' ? '--family' : '--support';
+        return css.getPropertyValue(token).trim() || '#1b6b52';
+      }
+      const mapEl = document.querySelector('[data-map]');
+      const mapBtn = document.querySelector('[data-map-toggle]');
+      const mapLabel = document.querySelector('[data-map-label]');
+      let map = null;
+      let layer = null;
+      let L = null;
+
+      function visibleCards() {
+        return cards.filter((c) => !c.hidden && c.dataset.lat && c.dataset.lng);
+      }
+
+      function loadCss(href) {
+        return new Promise((resolve) => {
+          if (document.querySelector(`link[href="${href}"]`)) return resolve();
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          link.onload = resolve;
+          link.onerror = resolve; // mapa sem estilo ainda é melhor que travar
+          document.head.appendChild(link);
+        });
+      }
+
+      function drawMarkers() {
+        if (!map || !L) return;
+        if (layer) layer.remove();
+        layer = L.layerGroup().addTo(map);
+        const bounds = [];
+        for (const card of visibleCards()) {
+          const lat = Number(card.dataset.lat);
+          const lng = Number(card.dataset.lng);
+          const color = toneColor(card.dataset.kind);
+          L.circleMarker([lat, lng], {
+            radius: 7, weight: 2, color, fillColor: color, fillOpacity: 0.85,
+          })
+            .addTo(layer)
+            .bindPopup(
+              `<strong>${card.dataset.name}</strong><br>` +
+              `<a href="/servico/${card.dataset.id}/">ver detalhes</a>`,
+            );
+          bounds.push([lat, lng]);
+        }
+        if (bounds.length) map.fitBounds(bounds, { padding: [28, 28], maxZoom: 14 });
+      }
+
+      mapBtn?.addEventListener('click', async () => {
+        const opening = mapEl.hidden;
+        mapEl.hidden = !opening;
+        mapBtn.setAttribute('aria-expanded', String(opening));
+        mapLabel.textContent = opening ? 'Esconder mapa' : 'Ver no mapa';
+        if (!opening || map) { if (opening) drawMarkers(); return; }
+        mapLabel.textContent = 'Carregando mapa…';
+        // Leaflet só é baixado quando alguém realmente abre o mapa. O CSS vem de
+        // /vendor/ e não via import: o bundler o promoveria a <link> no head,
+        // pesando em toda página de cidade mesmo sem ninguém abrir o mapa.
+        const [leaflet] = await Promise.all([import('leaflet'), loadCss('/vendor/leaflet.css')]);
+        L = leaflet.default ?? leaflet;
+        map = L.map(mapEl, { scrollWheelZoom: false });
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap', maxZoom: 18,
+        }).addTo(map);
+        mapLabel.textContent = 'Esconder mapa';
+        drawMarkers();
+      });
+
+      function apply() {
+        const nb = nbSelect?.value ?? 'all';
+        let visible = 0;
+        for (const card of cards) {
+          const okKind = kind === 'all' || card.dataset.kind === kind;
+          const okNb = nb === 'all' || card.dataset.neighborhood === nb;
+          const ok24 = !only24h || card.dataset.open24h === '1';
+          const show = okKind && okNb && ok24;
+          card.hidden = !show;
+          if (show) visible++;
+        }
+        for (const group of groups) {
+          const any = [...group.querySelectorAll('.svc')].some((c) => !c.hidden);
+          group.hidden = !any;
+        }
+        const filtering = kind !== 'all' || nb !== 'all' || only24h;
+        countEl.hidden = !filtering;
+        countEl.textContent = `Mostrando ${visible} de ${cards.length} serviços.`;
+        emptyEl.hidden = visible > 0;
+        if (map && !mapEl.hidden) drawMarkers();
+      }
+
+      for (const chip of chips) {
+        chip.addEventListener('click', () => {
+          kind = chip.dataset.filterKind;
+          for (const c of chips) {
+            const on = c === chip;
+            c.classList.toggle('is-on', on);
+            c.setAttribute('aria-pressed', String(on));
+          }
+          apply();
+        });
+      }
+      nbSelect?.addEventListener('change', apply);
+      const chip24 = document.querySelector('[data-filter-24h]');
+      chip24?.addEventListener('click', () => {
+        only24h = !only24h;
+        chip24.classList.toggle('is-on', only24h);
+        chip24.setAttribute('aria-pressed', String(only24h));
+        apply();
+      });
+      document.querySelector('[data-reset]')?.addEventListener('click', () => {
+        kind = 'all';
+        only24h = false;
+        chip24?.classList.remove('is-on');
+        chip24?.setAttribute('aria-pressed', 'false');
+        if (nbSelect) nbSelect.value = 'all';
+        chips.forEach((c, i) => {
+          c.classList.toggle('is-on', i === 0);
+          c.setAttribute('aria-pressed', String(i === 0));
+        });
+        apply();
+      });
+    }
+  </script>
+
+  <style>
+    .intro { color: var(--ink-soft); max-width: 46em; }
+
+    .citymap { margin-bottom: var(--s4); }
+    .map {
+      height: 340px; margin-top: var(--s3);
+      border-radius: var(--radius); border: 1px solid var(--line);
+    }
+
+    .filters {
+      position: sticky; top: 0; z-index: 5;
+      background: var(--bg); padding: var(--s3) 0;
+      border-bottom: 1px solid var(--line); margin-bottom: var(--s4);
+    }
+    .chips { display: flex; gap: var(--s2); overflow-x: auto; padding-bottom: var(--s1); scrollbar-width: none; }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      display: inline-flex; align-items: center; gap: var(--s1);
+      white-space: nowrap; cursor: pointer; min-height: 40px;
+      background: var(--surface); color: var(--ink);
+      border: 1px solid var(--line); border-radius: 100px;
+      padding: var(--s1) var(--s3); font-size: .88rem; font-weight: 500;
+      font-family: inherit;
+    }
+    .chip:hover { border-color: var(--primary); }
+    /* --on-primary já é a cor legível sobre o verde em cada tema; um
+       @media prefers-color-scheme aqui ignoraria a escolha do seletor. */
+    .chip.is-on {
+      background: var(--primary); color: var(--on-primary); border-color: var(--primary);
+    }
+    .chip.is-on .c { background: var(--on-primary-veil); color: var(--on-primary); }
+    .c {
+      font-size: .74rem; background: var(--surface-2); color: var(--ink-soft);
+      border-radius: 100px; padding: 0 6px; font-variant-numeric: tabular-nums;
+    }
+
+    .chip-24h { margin-top: var(--s3); }
+    .nb-filter { display: flex; align-items: center; gap: var(--s2); margin-top: var(--s3); font-size: .88rem; }
+    .nb-filter span { color: var(--ink-soft); }
+    .nb-filter select {
+      flex: 1; max-width: 320px; min-height: 40px; padding: var(--s1) var(--s2);
+      border: 1px solid var(--line); border-radius: 8px;
+      background: var(--surface); color: var(--ink); font-family: inherit; font-size: .9rem;
+    }
+
+    .count { font-size: .85rem; color: var(--ink-soft); margin-bottom: var(--s3); }
+    h2 { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s2); }
+    .h2-count { font-size: .8rem; font-weight: 500; color: var(--ink-soft); }
+    .empty { color: var(--ink-soft); }
+    .linkish {
+      background: none; border: none; padding: 0; font: inherit;
+      color: var(--primary-ink); text-decoration: underline; cursor: pointer;
+    }
+  </style>
+</Base>

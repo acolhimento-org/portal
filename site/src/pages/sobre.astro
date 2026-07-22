@@ -1,0 +1,160 @@
+---
+import Base from '../layouts/Base.astro';
+import { services, formatDate } from '../lib/data';
+import { SITE } from '../lib/site';
+
+const lastUpdate = services.reduce(
+  (max, s) => (s.source_updated_at > max ? s.source_updated_at : max), '');
+
+const title = 'Sobre o Acolhimento: como funciona e de onde vêm os dados';
+const description =
+  'O Acolhimento é um projeto social sem fins lucrativos que reúne, de fontes oficiais, ' +
+  'os serviços gratuitos de tratamento de dependência química no Brasil.';
+---
+<Base title={title} description={description}>
+  <section class="band band--intro">
+    <div class="container">
+      <p class="crumbs"><a href="/">Início</a> › Sobre</p>
+      <p class="eyebrow eyebrow--left">Sobre o projeto</p>
+      <h1>Um atalho entre a decisão de pedir ajuda e a ajuda em si</h1>
+      <p class="lede">
+        Quando alguém decide procurar ajuda para a dependência de álcool ou outras
+        drogas, seja para si ou para um familiar, cada hora importa. Mas a informação
+        sobre onde buscar essa ajuda no Brasil está espalhada em dezenas de sites, e
+        as primeiras respostas na internet costumam ser anúncios de clínicas pagas.
+      </p>
+      <p class="lede">
+        O Acolhimento existe para encurtar esse caminho. Reunimos num só lugar, com
+        busca simples, os serviços <strong>gratuitos</strong>, ou seja, a rede pública
+        do SUS e os grupos de apoio, atualizados automaticamente a partir das fontes
+        oficiais.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--dark" aria-labelledby="quem-mantem">
+    <div class="container narrow">
+      <p class="eyebrow eyebrow--left">Quem mantém</p>
+      <h2 id="quem-mantem">Um projeto de uma pessoa só, sem patrocínio e sem anúncio</h2>
+      <p>
+        O Acolhimento é mantido de forma independente por um desenvolvedor, no
+        tempo livre e com o próprio dinheiro. Não é empresa, não é ONG, não tem CNPJ,
+        não tem funcionário e não recebe financiamento de ninguém. Quem quiser saber
+        quem está por trás, ou falar comigo, chega por um clique: está tudo no
+        <a href={SITE.repo} rel="noopener">repositório aberto</a>.
+      </p>
+      <p>
+        Ninguém lucra com este portal, e você não precisa acreditar na minha palavra.
+        <strong>O código é aberto</strong> e qualquer pessoa pode conferir que não há
+        rastreador, anúncio, lead à venda nem clínica pagando para aparecer. Cada
+        página mostra a fonte e a data em que o dado foi conferido.
+      </p>
+      <p>
+        Se você é jornalista, pesquisador, trabalha num CAPS ou numa secretaria de
+        saúde e precisa falar com alguém, escreva. Eu respondo.
+      </p>
+      <p class="contato-dest">
+        <a class="btn secondary" href={`mailto:${SITE.contato}`}>{SITE.contato}</a>
+        <a class="btn secondary" href={SITE.repo} rel="noopener">Código no GitHub</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Nossos compromissos</p>
+        <h2>O que sustenta a confiança neste portal</h2>
+      </div>
+      <div class="pledge-grid">
+        <article class="card">
+          <h3>Sem fins lucrativos</h3>
+          <p>Não recebemos de clínicas, não vendemos encaminhamento e não exibimos anúncios.</p>
+        </article>
+        <article class="card">
+          <h3>Só fontes públicas e oficiais</h3>
+          <p>Nada de cadastro pago para aparecer aqui. Ninguém compra posição neste site.</p>
+        </article>
+        <article class="card">
+          <h3>Transparência</h3>
+          <p>Toda página mostra a fonte e a data em que aquele dado foi coletado.</p>
+        </article>
+        <article class="card">
+          <h3>Privacidade</h3>
+          <p>Não pedimos cadastro e não guardamos a sua localização. A busca roda no seu navegador.</p>
+        </article>
+        <article class="card">
+          <h3>Respeito ao anonimato</h3>
+          <p>Divulgamos locais e horários de reuniões, nunca informações sobre pessoas.</p>
+        </article>
+        <article class="card">
+          <h3>Dados que não somem</h3>
+          <p>Se uma coleta falha, mantemos a última versão boa em vez de apagar serviços.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <p class="eyebrow eyebrow--left">Procedência</p>
+      <h2>De onde vêm os dados</h2>
+      <ul class="sources">
+        <li>
+          <strong>CAPS, CAPS AD e demais serviços do SUS:</strong>
+          <a href="https://cnes.datasus.gov.br" rel="noopener">CNES, o Cadastro Nacional
+          de Estabelecimentos de Saúde</a> do Ministério da Saúde, via dados abertos.
+        </li>
+        <li>
+          <strong>Grupos de Narcóticos Anônimos:</strong>
+          <a href="https://www.na.org.br" rel="noopener">diretório oficial de reuniões
+          do NA Brasil</a>.
+        </li>
+        <li>
+          <strong>Em breve:</strong> Alcoólicos Anônimos, Al-Anon (para familiares) e
+          outros grupos de apoio.
+        </li>
+      </ul>
+      <p class="stamp">Última atualização dos dados: <strong>{formatDate(lastUpdate)}</strong></p>
+
+      <h2 id="correcao">Encontrou um erro?</h2>
+      <p>
+        Telefone que não atende, endereço que mudou, serviço que fechou? Escreva para
+        <a href={`mailto:${SITE.contato}`}>{SITE.contato}</a>
+        dizendo o nome do serviço e a correção. A gente verifica e atualiza.
+      </p>
+
+      <h2>Aviso importante</h2>
+      <p>
+        Este portal é informativo e não substitui avaliação profissional de saúde.
+        Em situação de emergência (risco de vida, overdose), ligue
+        <a href="tel:192">SAMU 192</a>. Para apoio emocional imediato, ligue
+        <a href="tel:188">CVV 188</a>, gratuito e 24 horas.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s8); }
+    .lede { font-size: 1.02rem; max-width: 62ch; }
+    .narrow { max-width: 72ch; }
+    .narrow h2 { margin-top: var(--s7); }
+    .narrow h2:first-of-type { margin-top: 0; }
+
+    .pledge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s4); }
+    .pledge-grid h3 { margin-bottom: var(--s2); }
+    .pledge-grid p { margin: 0; font-size: .88rem; }
+
+    .sources { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s4); }
+    .sources li {
+      border-left: 2px solid var(--accent); padding-left: var(--s4);
+      font-size: .93rem;
+    }
+    .contato-dest { display: flex; flex-wrap: wrap; gap: var(--s3); margin-top: var(--s5); }
+    .stamp {
+      margin-top: var(--s5); font-size: .86rem; color: var(--ink-soft);
+      background: var(--surface-2); border-radius: 100px; padding: var(--s2) var(--s4);
+      display: inline-block;
+    }
+  </style>
+</Base>

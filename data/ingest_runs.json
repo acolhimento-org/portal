@@ -1,0 +1,18 @@
+[
+ {
+  "source": "cnes",
+  "started_at": "2026-07-20T15:26:23Z",
+  "finished_at": "2026-07-20T15:26:51Z",
+  "record_count": 3649,
+  "status": "ok",
+  "notes": null
+ },
+ {
+  "source": "na_bmlt",
+  "started_at": "2026-07-20T15:26:51Z",
+  "finished_at": "2026-07-20T15:26:55Z",
+  "record_count": 2158,
+  "status": "ok",
+  "notes": null
+ }
+]

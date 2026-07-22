@@ -1,0 +1,55 @@
+---
+// Motivos de acolhimento em traço abstrato.
+//
+// Sem rostos, sem membros, sem bonecos: a forma sugere o gesto e para por aí.
+// Ilustração figurativa de pessoa (o estilo de blob que virou padrão em site de
+// startup) trivializa o assunto e soa desrespeitosa num portal sobre
+// dependência. Duas curvas que leem como um abraço dizem o mesmo sem infantilizar.
+//
+// Cada motivo é uma metáfora do que a seção diz:
+//   amparo  = alguém sustentado por duas mãos abertas
+//   junto   = duas presenças lado a lado, uma amparando a outra
+//   retorno = o círculo que se abre e continua, para quem recomeça
+interface Props {
+  motif: 'amparo' | 'junto' | 'retorno';
+  size?: number;
+  class?: string;
+}
+const { motif, size = 64, class: klass = '' } = Astro.props;
+
+const motifs: Record<string, string> = {
+  amparo: `
+    <path d="M18 22a24 24 0 0 0 0 30" />
+    <path d="M46 22a24 24 0 0 1 0 30" />
+    <circle cx="32" cy="30" r="7.5" />
+    <path d="M22 52c2.6-6.6 5.6-9.9 10-9.9s7.4 3.3 10 9.9" />`,
+  junto: `
+    <circle cx="24" cy="26" r="6.5" />
+    <circle cx="43" cy="30" r="5" />
+    <path d="M13 50c1.8-7.4 5.5-11.1 11-11.1s9.2 3.7 11 11.1" />
+    <path d="M37 50c1.1-5.2 3.1-7.8 6-7.8s4.9 2.6 6 7.8" />
+    <path d="M52 20a20 20 0 0 1 0 26" />`,
+  retorno: `
+    <path d="M46 18a19 19 0 1 0 6 14" />
+    <path d="M52 18v14h-13" />
+    <circle cx="32" cy="32" r="6.5" />`,
+};
+---
+<svg
+  class={`embrace ${klass}`}
+  width={size}
+  height={size}
+  viewBox="0 0 64 64"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  set:html={motifs[motif]}
+/>
+
+<style>
+  .embrace { display: block; flex: none; }
+</style>

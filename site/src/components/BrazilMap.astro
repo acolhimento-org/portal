@@ -1,0 +1,100 @@
+---
+// Mapa do Brasil do hero, desenhado a partir da malha oficial do IBGE.
+// Os pins não são decorativos: a posição é o centroide real do estado e o
+// tamanho vem da contagem de serviços que temos ali. Se a cobertura mudar, o
+// mapa muda junto, porque a contagem sai de services.json no build.
+import mapa from '../data/brazil-uf.json';
+import { services } from '../lib/data';
+
+const porUf = new Map<string, number>();
+for (const s of services) {
+  if (s.active) porUf.set(s.state, (porUf.get(s.state) ?? 0) + 1);
+}
+const maximo = Math.max(...porUf.values(), 1);
+
+// Raio por raiz quadrada: proporcional à área do pin, não ao diâmetro, senão
+// São Paulo viraria uma bolha que engole os vizinhos.
+const raio = (n: number) => 5 + Math.sqrt(n / maximo) * 17;
+
+const estados = mapa.estados
+  .map((e) => ({ ...e, total: porUf.get(e.uf) ?? 0 }))
+  .sort((a, b) => b.total - a.total);
+
+const comServico = estados.filter((e) => e.total > 0);
+const totalGeral = services.length.toLocaleString('pt-BR');
+const legenda =
+  `Mapa do Brasil com ${totalGeral} serviços gratuitos distribuídos em ` +
+  `${comServico.length} estados. Maior concentração em ` +
+  estados.slice(0, 3).map((e) => `${e.uf} (${e.total})`).join(', ') + '.';
+---
+<figure class="mapfig">
+  <svg class="map" viewBox={mapa.viewBox} role="img" aria-label={legenda}>
+    <g class="state-shapes">
+      {estados.map((e) => (
+        <path d={e.d} class={e.total > 0 ? 'state state--on' : 'state'} />
+      ))}
+    </g>
+    <g class="pins">
+      {comServico.map((e, i) => (
+        <g class="pin" style={`--i:${i}`}>
+          <circle class="pin-halo" cx={e.cx} cy={e.cy} r={raio(e.total)} />
+          <circle class="pin-dot" cx={e.cx} cy={e.cy} r={Math.max(2.5, raio(e.total) * 0.34)} />
+          <title>{e.uf}: {e.total} serviços gratuitos</title>
+        </g>
+      ))}
+    </g>
+  </svg>
+
+  <figcaption class="mapcap">
+    <span class="cap-n">{totalGeral}</span>
+    <span class="cap-l">serviços gratuitos em {comServico.length} estados, de fontes oficiais</span>
+  </figcaption>
+</figure>
+
+<style>
+  .mapfig { position: relative; margin: 0; }
+  .map { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .state {
+    fill: var(--map-land);
+    stroke: var(--map-line);
+    stroke-width: 1;
+    stroke-linejoin: round;
+  }
+  .state--on { fill: var(--map-land-on); }
+
+  .pin-halo { fill: var(--accent); opacity: .22; }
+  .pin-dot { fill: var(--accent-ink); }
+
+  /* Os pins acendem em cascata, uma vez só. Sugere o mapa se preenchendo,
+     que é literalmente o que o projeto faz. */
+  .pin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: acende .5s ease-out backwards;
+    animation-delay: calc(var(--i) * 55ms + 200ms);
+  }
+  @keyframes acende {
+    from { opacity: 0; transform: scale(.4); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .mapcap {
+    position: absolute; left: 0; bottom: 0;
+    background: var(--surface); border-radius: var(--radius-sm);
+    padding: var(--s3) var(--s4); box-shadow: var(--shadow);
+    max-width: 58%;
+  }
+  .cap-n {
+    display: block; font-size: 1.4rem; font-weight: 700; line-height: 1.1;
+    color: var(--ink); letter-spacing: -.03em; font-variant-numeric: tabular-nums;
+  }
+  .cap-l { display: block; font-size: .72rem; line-height: 1.35; color: var(--ink-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pin { animation: none; }
+  }
+  @media (max-width: 860px) {
+    .mapfig { max-width: 460px; margin: 0 auto; }
+  }
+</style>

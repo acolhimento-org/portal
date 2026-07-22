@@ -1,0 +1,63 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ServiceCard from '../../../components/ServiceCard.astro';
+import { services, KINDS, formatDate } from '../../../lib/data';
+
+export function getStaticPaths() {
+  const combos = new Map<string, { kind: string; state: string; slug: string; city: string }>();
+  for (const s of services) {
+    const key = `${s.kind}/${s.state}/${s.city_slug}`;
+    if (!combos.has(key)) {
+      combos.set(key, { kind: s.kind, state: s.state, slug: s.city_slug, city: s.city });
+    }
+  }
+  return [...combos.values()].map((c) => ({
+    params: { kind: KINDS[c.kind].slug, uf: c.state.toLowerCase(), city: c.slug },
+    props: { kindKey: c.kind, cityName: c.city, state: c.state },
+  }));
+}
+
+const { city } = Astro.params;
+const { kindKey, cityName, state } = Astro.props;
+const meta = KINDS[kindKey];
+const items = services.filter(
+  (s) => s.kind === kindKey && s.state === state && s.city_slug === city && s.active,
+);
+
+const coletadoEm = items.reduce((max, s) => (s.source_updated_at > max ? s.source_updated_at : max), '');
+
+const title = `${meta.short} em ${cityName} (${state}): endereço, telefone e horários`;
+const description =
+  `${items.length === 1 ? 'Veja onde fica o' : `Veja os ${items.length}`} ${meta.short} ` +
+  `em ${cityName}/${state}. ${meta.freeLabel}. Informação de fonte oficial, sem fins comerciais.`;
+---
+<Base title={title} description={description}>
+  <div class="container">
+    <p class="crumbs">
+      <a href="/">Início</a> › <a href={`/${state.toLowerCase()}/${city}/`}>{cityName}/{state}</a> › {meta.short}
+    </p>
+    <h1>{meta.short} em {cityName}/{state}</h1>
+    <p class="intro">{meta.freeLabel}.</p>
+
+    <div class="stack">
+      {items.map((s) => <ServiceCard service={s} featured={kindKey === 'caps_ad'} />)}
+    </div>
+
+    <p class="more">
+      <a class="btn secondary" href={`/${state.toLowerCase()}/${city}/`}>
+        Ver todos os serviços em {cityName}
+      </a>
+    </p>
+
+    <div class="source-note">
+      Dados de fontes oficiais e públicas, coletados em {formatDate(coletadoEm)}.
+      Telefones e horários podem mudar, então confirme antes de se deslocar.
+      Encontrou um erro? <a href="/sobre/#correcao">Avise a gente e corrigimos</a>.
+    </div>
+  </div>
+
+  <style>
+    .intro { color: var(--ink-soft); margin-bottom: var(--s5); }
+    .more { margin-top: var(--s5); }
+  </style>
+</Base>

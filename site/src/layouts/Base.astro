@@ -1,0 +1,399 @@
+---
+import '@fontsource-variable/sora';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import { SITE } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  jsonLd?: object | null;
+}
+const { title, description, jsonLd = null } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <meta name="theme-color" content="#f8f4ee" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#141a15" media="(prefers-color-scheme: dark)" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content="pt_BR" />
+  {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  <script is:inline>
+    // Aplica o tema antes da primeira pintura, senão a tela pisca ao trocar.
+    // Padrao e claro: quem nunca escolheu ve o tema claro, independente do
+    // sistema. So 'dark' salvo pela pessoa muda isso. O seletor continua
+    // guardando a preferencia de quem prefere escuro.
+    document.documentElement.dataset.theme =
+      localStorage.getItem('tema') === 'dark' ? 'dark' : 'light';
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Ir para o conteúdo</a>
+
+  <div class="emergency">
+    <div class="container emergency-inner">
+      <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" class="em-icon">
+        <path d="M12 3.2 22 20H2L12 3.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M12 9.5v4.2M12 16.8v.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span class="em-label">Ajuda agora:</span>
+      <a href="tel:188">CVV 188</a>
+      <span aria-hidden="true">·</span>
+      <a href="tel:192">SAMU 192</a>
+      <span aria-hidden="true">·</span>
+      <a href="tel:136" class="em-third">Disque Saúde 136</a>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="/" class="brand" aria-label="Acolhimento, página inicial">
+        <span class="brand-mark">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 20.5c-4.2-3-7-5.6-7-8.8A3.9 3.9 0 0 1 8.8 7.8c1.3 0 2.5.7 3.2 1.8.7-1.1 1.9-1.8 3.2-1.8A3.9 3.9 0 0 1 19 11.7c0 3.2-2.8 5.8-7 8.8z" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand-name">Acolhimento</span>
+      </a>
+      <nav aria-label="Principal">
+        <a href="/buscar/">Perto de mim</a>
+        <a href="/sobre/">Sobre</a>
+        <ThemeToggle />
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="foot-lead">
+        <strong>Acolhimento</strong> é um projeto social, gratuito e sem fins lucrativos.
+        Não temos vínculo com clínicas e não recebemos por encaminhamentos.
+      </p>
+      <p>
+        As informações vêm de fontes públicas e oficiais e podem mudar, então confirme
+        por telefone antes de se deslocar. Este portal não substitui avaliação médica.
+        Em emergências, ligue <a href="tel:192">192</a>.
+      </p>
+      <p class="foot-disclaimer">
+        Portal independente, sem qualquer vínculo, convênio, patrocínio ou endosso do
+        Ministério da Saúde, do SUS, de Narcóticos Anônimos ou de Alcoólicos Anônimos.
+        Publicamos os dados que essas instituições tornam públicos, e os nomes aparecem
+        aqui apenas para identificar os serviços.
+      </p>
+      <p class="foot-links">
+        <a href="/guia/">Guias: como buscar ajuda</a>
+        <a href="/sobre/">Como funciona e de onde vêm os dados</a>
+        <a href="/privacidade/">Privacidade e termos de uso</a>
+        <a href={SITE.repo} rel="noopener">Código aberto no GitHub</a>
+      </p>
+    </div>
+  </footer>
+
+  <style is:global>
+    /* ---- Tokens ------------------------------------------------------------
+       Paleta em família sage: a tinta é verde profundo em vez de preto, o que
+       tira o ar clínico sem perder autoridade. Acento em tan discreto no lugar
+       de terracota, que gritava. O ritmo da página vem das faixas alternadas
+       (creme / sage / escuro), não de molduras.
+       O escuro aparece duas vezes (media query + data-theme) em vez de
+       light-dark(): num Android antigo sem suporte, light-dark() cairia para
+       inválido e quebraria o contraste justo para quem mais precisa. */
+    :root {
+      --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
+      --s5: 24px; --s6: 40px; --s7: 64px; --s8: 96px;
+      --radius: 20px;
+      --radius-sm: 14px;
+      --maxw: 1080px;
+
+      --bg: #f8f4ee;
+      --surface: #ffffff;
+      --surface-2: #efe9df;
+      --band: #dde5d8;
+      --ink: #384638;
+      --ink-soft: #546254;
+      --line: #e2dccf;
+
+      --primary: #384638;
+      --primary-ink: #2c382c;
+      --primary-soft: #dde5d8;
+      --on-primary: #ffffff;
+      --on-primary-veil: rgba(255, 255, 255, .22);
+
+      --accent: #c08a2e;
+      --accent-ink: #855812;
+      --accent-soft: #f7ecd6;
+
+      --support: #855812;
+      --support-soft: #f7ecd6;
+      --family: #7a5068;
+      --family-soft: #f4e9f0;
+
+      --alert-bg: #f7ecd9;
+      --alert-line: #ddc79c;
+      --alert-ink: #6a4d1c;
+
+      --dark-panel: #384638;
+      --dark-panel-ink: #f2f5f0;
+      --dark-panel-soft: #c3cfbf;
+
+      --shadow: 0 1px 2px rgba(56, 70, 56, .04), 0 12px 32px rgba(56, 70, 56, .07);
+
+      --map-land: #ece5d8;
+      --map-land-on: #dde5d8;
+      --map-line: #f8f4ee;
+
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme='light']) {
+        --bg: #141a15;
+        --surface: #1e261f;
+        --surface-2: #28322a;
+        --band: #1b231c;
+        --ink: #eaf0e8;
+        --ink-soft: #a9b6a8;
+        --line: #334034;
+
+        --primary: #8cc4a2;
+        --primary-ink: #a7d6b8;
+        --primary-soft: #22301f;
+        --on-primary: #12200f;
+        --on-primary-veil: rgba(0, 0, 0, .22);
+
+        --accent: #dfb45f;
+        --accent-ink: #eccb85;
+        --accent-soft: #33290f;
+
+        --support: #eccb85;
+        --support-soft: #33290f;
+        --family: #d5a8c4;
+        --family-soft: #33222d;
+
+        --alert-bg: #33280f;
+        --alert-line: #5f4c1f;
+        --alert-ink: #f2dcae;
+
+        --dark-panel: #26332a;
+        --dark-panel-ink: #eaf0e8;
+        --dark-panel-soft: #a9b6a8;
+
+        --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px rgba(0, 0, 0, .3);
+
+        --map-land: #232c24;
+        --map-land-on: #2c3a2e;
+        --map-line: #141a15;
+
+      }
+    }
+
+    :root[data-theme='dark'] {
+      --bg: #141a15;
+      --surface: #1e261f;
+      --surface-2: #28322a;
+      --band: #1b231c;
+      --ink: #eaf0e8;
+      --ink-soft: #a9b6a8;
+      --line: #334034;
+
+      --primary: #8cc4a2;
+      --primary-ink: #a7d6b8;
+      --primary-soft: #22301f;
+      --on-primary: #12200f;
+      --on-primary-veil: rgba(0, 0, 0, .22);
+
+      --accent: #dfb45f;
+      --accent-ink: #eccb85;
+      --accent-soft: #33290f;
+
+      --support: #eccb85;
+      --support-soft: #33290f;
+      --family: #d5a8c4;
+      --family-soft: #33222d;
+
+      --alert-bg: #33280f;
+      --alert-line: #5f4c1f;
+      --alert-ink: #f2dcae;
+
+      --dark-panel: #26332a;
+      --dark-panel-ink: #eaf0e8;
+      --dark-panel-soft: #a9b6a8;
+
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 32px rgba(0, 0, 0, .3);
+
+      --map-land: #232c24;
+      --map-land-on: #2c3a2e;
+      --map-line: #141a15;
+
+    }
+
+    :root { color-scheme: light; }
+    :root[data-theme='dark'] { color-scheme: dark; }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme='light']) { color-scheme: dark; }
+    }
+
+    /* ---- Base -------------------------------------------------------------- */
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: 'Sora Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      color: var(--ink-soft);
+      background: var(--bg);
+      line-height: 1.65;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--s5); }
+
+    a { color: var(--primary-ink); }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+    h1, h2, h3, h4 { color: var(--ink); font-weight: 600; letter-spacing: -.02em; }
+    h1 { font-size: clamp(2rem, 5.4vw, 3.4rem); line-height: 1.08; margin: 0 0 var(--s4); }
+    h2 { font-size: clamp(1.5rem, 3.4vw, 2.2rem); line-height: 1.16; margin: 0 0 var(--s4); }
+    h3 { font-size: 1.05rem; line-height: 1.35; margin: 0; }
+    p { margin: 0 0 var(--s3); }
+    strong { color: var(--ink); font-weight: 600; }
+
+    .skip { position: absolute; left: -9999px; background: var(--primary); color: var(--on-primary); padding: var(--s2) var(--s4); z-index: 100; }
+    .skip:focus { left: var(--s2); top: var(--s2); }
+
+    /* ---- Faixas: o ritmo da página ---------------------------------------- */
+    .band { padding: var(--s8) 0; }
+    .band--soft { background: var(--band); }
+    .band--dark {
+      background: var(--dark-panel); color: var(--dark-panel-soft);
+      /* No tema claro o painel e escuro, mas o ouro foi calibrado para o creme
+         e fica escuro demais sobre ele. A faixa redefine o token para a sua
+         propria subarvore, entao acento e eyebrow ficam legiveis nos dois temas. */
+      --accent: #dfb45f;
+      --accent-ink: #eccb85;
+    }
+    .band--dark h1, .band--dark h2, .band--dark h3 { color: var(--dark-panel-ink); }
+    .band--dark strong { color: var(--dark-panel-ink); }
+
+    .section-head { text-align: center; max-width: 34ch; margin: 0 auto var(--s7); }
+    .section-head p { color: var(--ink-soft); margin: var(--s3) auto 0; max-width: 52ch; }
+    .band--dark .section-head p { color: var(--dark-panel-soft); }
+
+    .eyebrow {
+      display: flex; align-items: center; justify-content: center; gap: var(--s2);
+      font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--accent-ink); margin: 0 0 var(--s4);
+    }
+    .eyebrow::before, .eyebrow::after {
+      content: ""; width: 22px; height: 1px; background: var(--accent); opacity: .6;
+    }
+    .eyebrow--left { justify-content: flex-start; }
+    .eyebrow--left::before { display: none; }
+    .band--dark .eyebrow { color: var(--accent); }
+
+    /* ---- Componentes ------------------------------------------------------- */
+    .card {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: var(--s5); box-shadow: var(--shadow);
+    }
+    .band--soft .card { border-color: transparent; }
+    .stack > * + * { margin-top: var(--s3); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
+      background: var(--primary); color: var(--on-primary); border: 1px solid var(--primary);
+      border-radius: 100px; padding: 14px 26px; min-height: 50px;
+      font-family: inherit; font-size: .95rem; font-weight: 600;
+      text-decoration: none; cursor: pointer;
+    }
+    .btn:hover { background: var(--primary-ink); border-color: var(--primary-ink); }
+    .btn.secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
+    .btn.secondary:hover { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+    .band--dark .btn.secondary { color: var(--dark-panel-ink); border-color: var(--dark-panel-soft); }
+
+    .crumbs { font-size: .82rem; color: var(--ink-soft); margin: var(--s5) 0 var(--s3); }
+    .crumbs a { color: var(--ink-soft); }
+
+    .source-note {
+      background: var(--surface-2); border-radius: var(--radius);
+      padding: var(--s4) var(--s5); font-size: .84rem; color: var(--ink-soft);
+      margin-top: var(--s7);
+    }
+    .source-note a { color: var(--ink-soft); }
+
+    /* ---- Cabeçalho e rodapé ------------------------------------------------ */
+    .emergency {
+      background: var(--alert-bg); border-bottom: 1px solid var(--alert-line);
+      color: var(--alert-ink); font-size: .8rem;
+    }
+    .emergency-inner {
+      display: flex; align-items: center; gap: var(--s2);
+      padding-top: var(--s2); padding-bottom: var(--s2);
+      overflow-x: auto; white-space: nowrap; scrollbar-width: none;
+    }
+    .emergency-inner::-webkit-scrollbar { display: none; }
+    .em-icon { flex: none; }
+    .em-label { font-weight: 600; }
+    .emergency a { color: inherit; font-weight: 700; text-underline-offset: 2px; }
+
+    .topbar { background: var(--bg); border-bottom: 1px solid var(--line); }
+    .topbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--s3); padding-top: var(--s3); padding-bottom: var(--s3);
+    }
+    .brand { display: flex; align-items: center; gap: var(--s2); text-decoration: none; }
+    .brand-mark {
+      width: 32px; height: 32px; border-radius: 50%; flex: none;
+      background: var(--primary); color: var(--on-primary);
+      display: grid; place-items: center;
+    }
+    .brand-name { color: var(--ink); font-size: 1.05rem; font-weight: 500; letter-spacing: -.02em; }
+    .brand-name strong { font-weight: 700; }
+    .topbar nav { display: flex; align-items: center; gap: var(--s5); }
+    .topbar nav > a { text-decoration: none; font-weight: 500; font-size: .9rem; color: var(--ink-soft); }
+    .topbar nav > a:hover { color: var(--ink); }
+
+    main { display: block; min-height: 60vh; }
+    /* Paginas em faixa ja trazem o proprio respiro. As que usam .container
+       direto terminavam encostadas no rodape. */
+    main > .container:last-child { padding-bottom: var(--s8); }
+
+    .footer {
+      background: var(--dark-panel); color: var(--dark-panel-soft);
+      padding: var(--s7) 0 var(--s8); font-size: .86rem;
+    }
+    .footer a { color: var(--dark-panel-ink); }
+    .foot-lead { color: var(--dark-panel-ink); }
+    .foot-links { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); }
+    .foot-disclaimer {
+      border-top: 1px solid rgba(255, 255, 255, .12);
+      padding-top: var(--s4); margin-top: var(--s5);
+      font-size: .8rem; opacity: .9; max-width: 78ch;
+    }
+    .footer strong { color: var(--dark-panel-ink); }
+
+    @media (max-width: 560px) {
+      .container { padding: 0 var(--s4); }
+      .band { padding: var(--s7) 0; }
+      .em-third { display: none; }
+      .topbar nav { gap: var(--s3); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</body>
+</html>

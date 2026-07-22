@@ -1,0 +1,84 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const title = 'O que esperar na primeira ida ao CAPS AD ou ao NA | Acolhimento';
+const description =
+  'Como funciona chegar num CAPS AD pela primeira vez e como é uma reunião de ' +
+  'Narcóticos Anônimos: o que acontece, o que levar e o que ninguém vai exigir.';
+---
+<Base title={title} description={description}>
+  <section class="band band--intro">
+    <div class="container narrow">
+      <p class="crumbs"><a href="/">Início</a> › <a href="/guia/">Guias</a> › O que esperar</p>
+      <p class="eyebrow eyebrow--left">Guia</p>
+      <h1>O que esperar na primeira vez</h1>
+      <p class="lede">
+        O medo do desconhecido segura muita gente na porta. Este guia descreve,
+        sem enfeite, como funcionam a primeira ida a um CAPS AD e a primeira
+        reunião de NA. Nenhum dos dois exige preparo, dinheiro ou explicações.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>No CAPS AD (serviço do SUS)</h2>
+      <ul class="fatos">
+        <li><strong>Não precisa de encaminhamento.</strong> O CAPS é serviço de "porta aberta": dá para chegar diretamente, sem passar por médico antes e sem agendar.</li>
+        <li><strong>É gratuito.</strong> Tudo: acolhimento, consultas, medicação quando indicada, grupos. Não existe cobrança em nenhuma etapa.</li>
+        <li><strong>A primeira conversa chama-se acolhimento.</strong> Um profissional da equipe escuta a história, sem julgamento, e junto com a pessoa desenha os próximos passos. Costuma ser uma conversa, não um interrogatório.</li>
+        <li><strong>Documento ajuda, mas a falta dele não impede.</strong> Levar RG ou cartão do SUS agiliza o cadastro. Quem não tem documento é acolhido do mesmo jeito.</li>
+        <li><strong>Ir acompanhado é permitido.</strong> Familiar ou amigo pode entrar junto no acolhimento, se a pessoa quiser.</li>
+        <li><strong>Tratamento não significa internação.</strong> O CAPS trata em liberdade: a pessoa vai ao serviço, participa do que foi combinado e volta para casa. Internação é exceção, não o caminho padrão. <a href="/guia/direitos/">Veja o guia de direitos</a>.</li>
+        <li><strong>Recusar algo é permitido.</strong> O plano de cuidado é combinado, não imposto. Quem não quiser participar de um grupo ou tomar uma medicação pode dizer não e seguir sendo atendido.</li>
+      </ul>
+      <p class="obs">
+        Nas cidades sem CAPS AD, o CAPS comum ou a UBS do bairro fazem o mesmo
+        papel de porta de entrada e encaminham quando necessário.
+      </p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>Numa reunião de NA (Narcóticos Anônimos)</h2>
+      <ul class="fatos">
+        <li><strong>É só chegar no horário.</strong> Não tem inscrição, cadastro, convite nem lista de presença. A porta é literalmente aberta.</li>
+        <li><strong>Não custa nada.</strong> NA se mantém com contribuições voluntárias dos próprios membros. Ninguém pede dinheiro a quem chega.</li>
+        <li><strong>Falar é opcional.</strong> Dá para passar a reunião inteira só ouvindo. Ninguém é chamado a se apresentar contra a vontade.</li>
+        <li><strong>O anonimato é levado a sério.</strong> O que se diz na reunião fica na reunião. É um princípio central da irmandade.</li>
+        <li><strong>Reunião "aberta" e "fechada" são coisas diferentes.</strong> As abertas recebem familiares e qualquer interessado. As fechadas são reservadas a quem tem o problema com drogas. Nas páginas dos grupos aqui do site, essa informação aparece quando o grupo a informa.</li>
+        <li><strong>Existem reuniões online.</strong> Para quem não tem grupo por perto ou prefere começar de casa, muitos grupos fazem reuniões virtuais. Elas aparecem marcadas na busca.</li>
+      </ul>
+      <p class="obs">
+        Para problemas com álcool existe o AA (Alcoólicos Anônimos), com o mesmo
+        formato. Os grupos de AA ainda não estão mapeados aqui; o site oficial é
+        <a href="https://www.aa.org.br" rel="noopener">aa.org.br</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Próximos passos</h2>
+      <p>
+        <a class="btn" href="/buscar/">Achar um serviço perto de você</a>
+        <a class="btn secondary" href="/guia/perguntas/">Ver que perguntas fazer</a>
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s7); }
+    .narrow { max-width: 72ch; }
+    .lede { font-size: 1.02rem; }
+    .narrow h2 { margin-bottom: var(--s4); }
+    .fatos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+    .fatos li {
+      background: var(--surface); border-radius: var(--radius-sm);
+      padding: var(--s3) var(--s4); font-size: .95rem;
+    }
+    .obs { margin-top: var(--s4); font-size: .9rem; color: var(--ink-soft); }
+    .band h2 + p .btn { margin-right: var(--s2); }
+  </style>
+</Base>

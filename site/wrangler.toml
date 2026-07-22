@@ -1,0 +1,18 @@
+# Deploy do site estático na Cloudflare (Workers Static Assets).
+name = "acolhimento"
+compatibility_date = "2026-01-01"
+
+[assets]
+directory = "./dist"
+
+# Futuro: API de busca por raio no D1 (hoje a busca roda no cliente com /data/geo.json)
+# main = "worker/index.ts"
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "acolhimento"
+# database_id = "<criar com: wrangler d1 create acolhimento>"
+
+# Futuro: snapshots do pipeline no R2
+# [[r2_buckets]]
+# binding = "SNAPSHOTS"
+# bucket_name = "acolhimento-snapshots"

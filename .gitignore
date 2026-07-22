@@ -1,0 +1,30 @@
+# Node / Astro
+node_modules/
+dist/
+.astro/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+# instalação local acidental do pip (Python da máquina com prefixo quebrado)
+pipeline/Lib/
+pipeline/Scripts/
+
+# Dados brutos locais (snapshots vão para o R2 em produção)
+pipeline/raw/
+*.sqlite
+*.sqlite3
+*.db
+
+# Ambiente
+.env
+.env.*
+!.env.example
+.wrangler/
+.DS_Store
+
+# assets copiados do node_modules no build
+site/public/vendor/
+# índices derivados de data/services.json (gerados no prebuild)
+site/public/data/

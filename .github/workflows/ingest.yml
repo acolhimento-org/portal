@@ -1,0 +1,46 @@
+# Coleta periódica das fontes de dados e atualização do site.
+# Roda toda segunda às 06h (UTC-3 = 09h UTC) e pode ser disparado manualmente.
+name: Atualizar dados
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r pipeline/requirements.txt
+
+      - name: Rodar pipeline (CNES + NA)
+        working-directory: pipeline
+        run: python run.py
+
+      # Snapshot bruto para auditoria (opcional: exige secrets do R2)
+      # - name: Enviar snapshots ao R2
+      #   run: npx wrangler r2 object put ...
+
+      - name: Commitar dados atualizados
+        run: |
+          git config user.name "acolhimento-bot"
+          git config user.email "contato@acolhimento.org"
+          git add data/services.json data/ingest_runs.json
+          if git diff --cached --quiet; then
+            echo "Sem mudanças nos dados."
+          else
+            git commit -m "dados: atualização automática $(date -u +%Y-%m-%d)"
+            git push
+          fi
+      # O push em data/ dispara o build do Cloudflare Pages (integracao Git),
+      # que reconstroi e publica o site. Nao ha deploy via Actions nem Worker.

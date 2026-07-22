@@ -1,0 +1,120 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const title = 'Direitos de quem busca tratamento para álcool e drogas | Acolhimento';
+const description =
+  'Tratamento gratuito pelo SUS é direito garantido por lei. E internação tem regras: ' +
+  'entenda voluntária, involuntária e compulsória em linguagem simples (Lei 10.216).';
+---
+<Base title={title} description={description}>
+  <section class="band band--intro">
+    <div class="container narrow">
+      <p class="crumbs"><a href="/">Início</a> › <a href="/guia/">Guias</a> › Direitos</p>
+      <p class="eyebrow eyebrow--left">Guia</p>
+      <h1>Seus direitos, em linguagem simples</h1>
+      <p class="lede">
+        Quem procura tratamento para álcool e outras drogas no Brasil tem direitos
+        garantidos por lei. Conhecê-los protege contra dois erros comuns: pagar
+        pelo que é gratuito e aceitar internação como se fosse o único caminho.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Tratamento gratuito é direito, não favor</h2>
+      <p>
+        O SUS é obrigado por lei a oferecer tratamento para dependência de álcool e
+        outras drogas, pela Rede de Atenção Psicossocial (RAPS), da qual os CAPS
+        fazem parte. Isso vale para qualquer pessoa, com ou sem documento, com ou
+        sem plano de saúde, em qualquer cidade do país.
+      </p>
+      <p>
+        Na prática: ninguém precisa pagar clínica particular por falta de opção.
+        Pode existir fila ou distância, e isso é real em algumas regiões, mas o
+        direito existe e o serviço público existe. Este site lista
+        <a href="/">onde ele fica</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>Internação: as três modalidades que a lei reconhece</h2>
+      <p>
+        A Lei 10.216/2001, com as regras adicionais da Lei 13.840/2019, define três
+        tipos de internação. Os nomes parecem técnicos, mas a diferença é simples:
+        quem decide.
+      </p>
+      <div class="modal-grid">
+        <div class="card">
+          <h3>Voluntária</h3>
+          <p>A própria pessoa aceita e assina o pedido por escrito. Ela também pode
+          pedir para sair a qualquer momento.</p>
+        </div>
+        <div class="card">
+          <h3>Involuntária</h3>
+          <p>Pedida por terceiro (em geral a família) sem o consentimento da pessoa.
+          A lei exige laudo médico e impõe controle: o Ministério Público precisa
+          ser comunicado em até 72 horas, e a família pode pedir a interrupção.</p>
+        </div>
+        <div class="card">
+          <h3>Compulsória</h3>
+          <p>Determinada por um juiz, em processo judicial. Não depende de pedido
+          da família nem de aceitação da pessoa. É a mais rara das três.</p>
+        </div>
+      </div>
+      <p class="destaque">
+        O ponto que importa: <strong>a lei diz que a internação só é indicada
+        quando os recursos fora do hospital se mostrarem insuficientes.</strong>
+        Internação é exceção. O caminho padrão do SUS é o tratamento em liberdade,
+        no CAPS, com a pessoa vivendo a vida dela.
+      </p>
+      <p>
+        Isso importa porque parte do mercado vende internação como primeiro e único
+        passo. Antes de contratar qualquer internação paga, vale conhecer o CAPS da
+        região e conversar com a equipe de lá, que pode inclusive orientar sobre
+        quando a internação é de fato indicada.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Outros direitos de quem está em tratamento</h2>
+      <ul class="fatos">
+        <li><strong>Sigilo.</strong> As informações de saúde são confidenciais. Buscar tratamento não vai parar em ficha de emprego nem em cadastro público.</li>
+        <li><strong>Respeito e dignidade.</strong> A Lei 10.216 garante tratamento com humanidade e no interesse exclusivo de beneficiar a saúde da pessoa.</li>
+        <li><strong>Informação.</strong> A pessoa tem direito de saber qual é o seu tratamento e de participar das decisões sobre ele.</li>
+        <li><strong>Presença da família.</strong> O tratamento no CAPS pode incluir a família, e ela tem canais para participar e ser orientada. <a href="/guia/familia/">Veja o guia para a família</a>.</li>
+      </ul>
+      <p class="obs">
+        Este guia informa, não substitui orientação jurídica. Para casos concretos,
+        a Defensoria Pública do seu estado atende de graça.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s7); }
+    .narrow { max-width: 72ch; }
+    .lede { font-size: 1.02rem; }
+    .narrow h2 { margin-bottom: var(--s4); }
+    .modal-grid { display: grid; gap: var(--s3); margin: var(--s4) 0; }
+    .modal-grid h3 { margin: 0 0 var(--s2); color: var(--primary-ink); }
+    .modal-grid p { margin: 0; font-size: .92rem; }
+    .destaque {
+      background: var(--accent-soft); border-radius: var(--radius);
+      padding: var(--s4) var(--s5); margin: var(--s5) 0;
+    }
+    .fatos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+    .fatos li {
+      background: var(--surface); border-radius: var(--radius-sm);
+      padding: var(--s3) var(--s4); font-size: .95rem;
+    }
+    .obs { margin-top: var(--s4); font-size: .9rem; color: var(--ink-soft); }
+    @media (min-width: 700px) {
+      .modal-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</Base>
