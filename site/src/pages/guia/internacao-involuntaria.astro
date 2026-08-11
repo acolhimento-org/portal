@@ -1,0 +1,388 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../lib/site';
+
+const title = 'Internação involuntária: como funciona e como fazer pelo SUS | Acolhimento';
+const description =
+  'Quem pode pedir, o que a lei exige (laudo médico, aviso ao Ministério Público, ' +
+  'limite de 90 dias), como conseguir de graça pelo SUS e como reconhecer clínicas abusivas.';
+
+// Ícones inline (zero requisições), no mesmo traço dos ícones de serviço do site.
+const ico: Record<string, string> = {
+  doc: '<rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M9 8h6M9 12h6M9 16h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  pessoa: '<circle cx="12" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  escudo: '<path d="M12 3l7 2.8v5.4c0 4.3-2.8 7.6-7 9.8-4.2-2.2-7-5.5-7-9.8V5.8L12 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2.2 2.2L15.5 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+  relogio: '<circle cx="12" cy="12" r="8.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  voltar: '<path d="M7.5 5.5 4 9l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9h9.5a5.75 5.75 0 0 1 0 11.5H9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  hospital: '<path d="M4 21V8l8-4 8 4v13M4 21h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10.5v5M9.5 13h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  alerta: '<path d="M12 3.2 22 20H2L12 3.2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9.5v4.2M12 16.8v.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  check: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 12.5l2.6 2.6L16 9.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+};
+
+const resumo = [
+  'É legal, mas é exceção: só quando o tratamento aberto não bastou.',
+  'Só existe com laudo médico. Nenhuma clínica pode internar "no pedido da família".',
+  'Pelo SUS não custa nada, e o caminho começa no CAPS AD — a família pode ir sozinha.',
+  'Desconfie de "resgate" imediato pago: pode ser crime, não tratamento.',
+];
+
+const garantias = [
+  {
+    icone: 'doc',
+    titulo: 'Só com laudo médico.',
+    texto:
+      'Um médico precisa avaliar a pessoa e atestar, por escrito, que a internação é ' +
+      'necessária. Sem laudo, nenhuma instituição pode mantê-la internada.',
+  },
+  {
+    icone: 'pessoa',
+    titulo: 'Quem pode pedir:',
+    texto:
+      'familiar ou responsável legal. Na ausência deles, um servidor público da saúde ou ' +
+      'da assistência social pode pedir.',
+  },
+  {
+    icone: 'escudo',
+    titulo: 'Controle externo:',
+    texto:
+      'o estabelecimento é obrigado a comunicar a internação ao Ministério Público em ' +
+      'até 72 horas, e também a alta.',
+  },
+  {
+    icone: 'relogio',
+    titulo: 'Prazo:',
+    texto:
+      'dura só o necessário à desintoxicação, com limite de 90 dias. O médico encerra ' +
+      'antes se não for mais necessária.',
+  },
+  {
+    icone: 'voltar',
+    titulo: 'A família pode voltar atrás:',
+    texto: 'quem pediu a internação pode requerer, por escrito, que ela termine.',
+  },
+  {
+    icone: 'hospital',
+    titulo: 'Onde pode acontecer:',
+    texto:
+      'apenas em unidade de saúde com equipe médica (hospital geral, leito de saúde ' +
+      'mental). Comunidade terapêutica não pode — lá, a permanência é sempre voluntária.',
+  },
+];
+
+const sinais = [
+  'Promete <strong>"remoção" ou "resgate"</strong> — buscar a pessoa em casa à força. Sem laudo médico e fora de unidade de saúde, isso pode configurar cárcere privado, e quem contrata pode responder junto.',
+  'Fecha negócio <strong>por telefone, hoje, com pagamento adiantado</strong> — pressa é a ferramenta de venda deles.',
+  '<strong>Não mostra</strong> CNPJ, alvará sanitário, médico responsável (com CRM) nem permite visitar antes.',
+  'Promete <strong>"cura"</strong> ou prazo garantido de recuperação. Não existe.',
+  '<strong>Corta o contato</strong> da pessoa com a família "nos primeiros meses". Isolamento é sinal clássico de abuso.',
+  'É comunidade terapêutica, mas aceita receber alguém <strong>contra a vontade</strong> — ilegal, como visto acima.',
+];
+
+const faq = [
+  {
+    p: 'Posso internar um adulto contra a vontade dele?',
+    r:
+      'Sim, mas só nas condições da lei: um médico precisa avaliar a pessoa e emitir ' +
+      'laudo indicando a internação, o pedido parte da família ou do responsável legal, ' +
+      'e o estabelecimento comunica o Ministério Público em até 72 horas. Ninguém ' +
+      'interna só porque a família quer: sem laudo médico, é ilegal.',
+  },
+  {
+    p: 'Quanto custa a internação pelo SUS?',
+    r:
+      'Nada. A avaliação no CAPS, o laudo, a internação em leito do SUS e o tratamento ' +
+      'depois da alta são gratuitos. Desconfie de qualquer cobrança apresentada como ' +
+      '"a única saída".',
+  },
+  {
+    p: 'Quanto tempo dura uma internação involuntária?',
+    r:
+      'O tempo necessário à desintoxicação, com limite legal de 90 dias. Ela termina ' +
+      'antes disso quando o médico entende que não é mais necessária, e a família ou o ' +
+      'responsável legal pode pedir por escrito a interrupção a qualquer momento.',
+  },
+  {
+    p: 'A polícia faz internação involuntária?',
+    r:
+      'Não. Internação é decisão médica, não policial — a lei chega a proibir que ' +
+      'servidores da segurança pública sejam os autores do pedido. Em crise aguda ' +
+      '(overdose, risco de morte, surto), quem atende é o SAMU, pelo 192. A polícia ' +
+      '(190) entra apenas quando há violência ou risco imediato à segurança de alguém.',
+  },
+  {
+    p: 'Comunidade terapêutica pode receber alguém contra a vontade?',
+    r:
+      'Não. Pela lei, o acolhimento em comunidade terapêutica é sempre voluntário: a ' +
+      'pessoa precisa aceitar e pode sair quando quiser. Internação involuntária só ' +
+      'pode acontecer em unidade de saúde com equipe médica. Se uma comunidade ' +
+      'terapêutica oferece "buscar" ou manter alguém trancado, isso é ilegal.',
+  },
+  {
+    p: 'E se o SUS negar ou não tiver vaga?',
+    r:
+      'Peça a negativa por escrito e procure a Defensoria Pública do seu estado, que ' +
+      'atende de graça: ela pode cobrar a vaga do poder público e, em último caso, ' +
+      'pedir ao juiz uma internação compulsória. A Ouvidoria do SUS (136) também ' +
+      'registra a reclamação.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((item) => ({
+    '@type': 'Question',
+    name: item.p,
+    acceptedAnswer: { '@type': 'Answer', text: item.r },
+  })),
+};
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <section class="band band--intro">
+    <div class="container narrow">
+      <p class="crumbs"><a href="/">Início</a> › <a href="/guia/">Guias</a> › Internação involuntária</p>
+      <p class="eyebrow eyebrow--left">Guia</p>
+      <h1>Internação involuntária: o que a lei permite e como fazer pelo SUS</h1>
+      <p class="lede">
+        Se você chegou até aqui, provavelmente está com medo por alguém que ama e
+        ouviu que internar à força é a única saída. Respire: existe um caminho
+        legal, gratuito e mais seguro do que o desespero sugere. Este guia explica
+        esse caminho do começo ao fim.
+      </p>
+      <p class="urgente">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" set:html={ico.alerta} />
+        <span><strong>É uma emergência agora?</strong> Overdose, risco de morte ou surto:
+        ligue <a href="tel:192">SAMU 192</a> ou vá à UPA mais próxima. Violência em
+        andamento: <a href="tel:190">190</a>. O resto deste guia pode esperar.</span>
+      </p>
+      <div class="resumo card">
+        <p class="resumo-titulo">Em 30 segundos</p>
+        <ul>
+          {resumo.map((item) => (
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" set:html={ico.check} />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Antes de tudo: internar é a exceção, não o primeiro passo</h2>
+      <p>
+        A lei brasileira é explícita: internação só é indicada quando os recursos
+        fora do hospital se mostrarem insuficientes. Não é rigor burocrático, é o
+        que a evidência mostra: a maior parte das pessoas se recupera em
+        tratamento aberto, perto da própria vida, e internações forçadas sem
+        acompanhamento posterior têm recaída alta.
+      </p>
+      <p>
+        Por isso o caminho certo começa numa avaliação profissional, e ela é
+        gratuita: no <strong>CAPS AD</strong> (ou no CAPS comum, em cidades
+        menores), a equipe avalia a situação, <strong>mesmo que a pessoa se recuse
+        a ir</strong> — a família pode ir sozinha e ser orientada. É essa equipe
+        que diz se o caso é de tratamento aberto, de vaga em leito ou de
+        internação, e encaminha sem custo.
+      </p>
+      <p>
+        <a class="btn" href="/buscar/">Achar o CAPS mais próximo</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>O que é, exatamente, internação involuntária</h2>
+      <p>
+        É a internação pedida por outra pessoa, sem o consentimento de quem será
+        internado. Ela existe na lei (Lei 10.216/2001 e Lei 13.840/2019) e é
+        cercada de garantias, porque priva alguém da liberdade:
+      </p>
+      <ul class="fatos">
+        {garantias.map((g) => (
+          <li>
+            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" set:html={ico[g.icone]} />
+            <span><strong>{g.titulo}</strong> {g.texto}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="obs">
+        Existe ainda a <strong>internação compulsória</strong>, determinada por um
+        juiz em processo judicial — é rara e normalmente entra quando o poder
+        público falhou. As três modalidades estão resumidas no
+        <a href="/guia/direitos/">guia de direitos</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>O passo a passo pelo SUS, de graça</h2>
+      <ol class="passos">
+        <li>
+          <h3>Vá ao CAPS AD da sua cidade — com ou sem a pessoa</h3>
+          <p>Leve o que souber: o que a pessoa usa, há quanto tempo, episódios de
+          risco (overdoses, violência, ideias de suicídio). A equipe acolhe a
+          família, avalia e monta o plano. Sem CAPS na cidade, comece pela UBS
+          (posto de saúde), que encaminha.</p>
+        </li>
+        <li>
+          <h3>Se houver indicação, o laudo sai dessa avaliação</h3>
+          <p>Sendo caso de internação, o próprio médico da rede emite o laudo e o
+          serviço aciona a vaga em leito do SUS. A família não precisa "arranjar
+          um médico": o sistema público faz essa parte.</p>
+        </li>
+        <li>
+          <h3>Em crise aguda, o hospital pode internar direto</h3>
+          <p>Se a pessoa chega pelo SAMU ou pela emergência em risco grave, o
+          médico do plantão pode indicar a internação ali mesmo, com as mesmas
+          garantias (laudo, comunicação ao Ministério Público).</p>
+        </li>
+        <li>
+          <h3>Negaram ou não há vaga? Documente e escale</h3>
+          <p>Peça a negativa por escrito, registre na Ouvidoria do SUS
+          (<a href="tel:136">136</a>) e procure a <strong>Defensoria Pública</strong>
+          do seu estado, que atende de graça e pode cobrar a vaga na Justiça.</p>
+        </li>
+        <li>
+          <h3>Depois da alta, o tratamento continua</h3>
+          <p>A internação desintoxica; quem sustenta a recuperação é o
+          acompanhamento no CAPS e os grupos de apoio. Sair do leito direto para o
+          nada é a receita da recaída. <a href="/guia/familia/">O guia da família</a>
+          ajuda nessa fase.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="container narrow">
+      <h2>Cuidado com o mercado do desespero</h2>
+      <p>
+        Existe uma indústria que lucra exatamente com o momento que você está
+        vivendo. Fiscalizações oficiais em comunidades terapêuticas já encontraram
+        violações de direitos em massa, e há casos de cárcere privado e até
+        trabalho escravo. Antes de contratar qualquer serviço pago, confira os
+        sinais de alerta:
+      </p>
+      <ul class="alerta-lista">
+        {sinais.map((s) => (
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" set:html={ico.alerta} />
+            <span set:html={s} />
+          </li>
+        ))}
+      </ul>
+      <p>
+        Presenciou ou suspeita de abuso? Denuncie ao Ministério Público do seu
+        estado, à Vigilância Sanitária do município ou pelo
+        <a href="tel:136">Disque Saúde 136</a>. Denúncia anônima vale.
+      </p>
+    </div>
+  </section>
+
+  <section class="band band--soft">
+    <div class="container narrow">
+      <h2>Perguntas frequentes</h2>
+      <div class="faq">
+        {faq.map((item) => (
+          <details class="card">
+            <summary>{item.p}</summary>
+            <p>{item.r}</p>
+          </details>
+        ))}
+      </div>
+      <p class="obs">
+        Este guia informa, não substitui avaliação médica nem orientação jurídica.
+        Para o seu caso concreto, o CAPS orienta a parte de saúde e a Defensoria
+        Pública, a parte legal — os dois de graça.
+      </p>
+      <p>
+        <a class="btn" href="/buscar/">Achar um CAPS AD perto de você</a>
+        <a class="btn secondary" href="/guia/familia/">Guia para a família</a>
+      </p>
+      <p class="source-note">
+        Fontes: <a href="https://www.planalto.gov.br/ccivil_03/leis/leis_2001/l10216.htm" rel="noopener">Lei
+        10.216/2001</a> e <a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13840.htm"
+        rel="noopener">Lei 13.840/2019</a>, nos textos oficiais do Planalto.
+        Última revisão deste guia: agosto de 2026. Encontrou algo impreciso ou
+        desatualizado? Escreva para <a href={`mailto:${SITE.contato}`}>{SITE.contato}</a>.
+      </p>
+    </div>
+  </section>
+
+  <style>
+    .band--intro { padding-top: var(--s5); padding-bottom: var(--s7); }
+    .narrow { max-width: 72ch; }
+    .lede { font-size: 1.02rem; }
+    .narrow h2 { margin-bottom: var(--s4); }
+    .urgente {
+      display: flex; align-items: flex-start; gap: var(--s3);
+      background: var(--alert-bg); border: 1px solid var(--alert-line);
+      color: var(--alert-ink); border-radius: var(--radius-sm);
+      padding: var(--s3) var(--s4); font-size: .95rem; margin-top: var(--s4);
+    }
+    .urgente svg { flex: none; margin-top: 4px; }
+    .urgente a { color: inherit; font-weight: 700; }
+    .resumo { margin-top: var(--s5); padding: var(--s4) var(--s5); }
+    .resumo-titulo {
+      font-size: .72rem; font-weight: 600; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--accent-ink); margin: 0 0 var(--s3);
+    }
+    .resumo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s2); }
+    .resumo li { display: flex; align-items: flex-start; gap: var(--s2); font-size: .93rem; }
+    .resumo svg { flex: none; margin-top: 2px; color: var(--primary); }
+    .fatos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
+    .fatos li {
+      display: flex; align-items: flex-start; gap: var(--s3);
+      background: var(--surface); border-radius: var(--radius-sm);
+      padding: var(--s3) var(--s4); font-size: .95rem;
+    }
+    .fatos svg { flex: none; margin-top: 3px; color: var(--primary); }
+    .passos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s4); counter-reset: passo; }
+    .passos li {
+      background: var(--surface); border-radius: var(--radius);
+      padding: var(--s4) var(--s5); position: relative; padding-left: 64px;
+      counter-increment: passo;
+    }
+    .passos li::before {
+      content: counter(passo);
+      position: absolute; left: var(--s4); top: var(--s4);
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--primary); color: var(--on-primary);
+      display: grid; place-items: center; font-weight: 600; font-size: .95rem;
+    }
+    .passos h3 { margin: 0 0 var(--s2); color: var(--primary-ink); }
+    .passos p { margin: 0; font-size: .92rem; }
+    .alerta-lista { list-style: none; margin: 0 0 var(--s4); padding: 0; display: grid; gap: var(--s3); }
+    .alerta-lista li {
+      display: flex; align-items: flex-start; gap: var(--s3);
+      background: var(--alert-bg); border-left: 3px solid var(--alert-line);
+      color: var(--alert-ink); border-radius: var(--radius-sm);
+      padding: var(--s3) var(--s4); font-size: .93rem;
+    }
+    .alerta-lista svg { flex: none; margin-top: 3px; }
+    .alerta-lista :global(strong) { color: inherit; }
+    .faq { display: grid; gap: var(--s3); margin-bottom: var(--s4); }
+    .faq details { padding: 0; overflow: hidden; }
+    .faq summary {
+      cursor: pointer; padding: var(--s4) var(--s5); padding-right: 52px;
+      font-weight: 600; color: var(--ink); font-size: .97rem;
+      list-style: none; position: relative;
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after {
+      content: ""; position: absolute; right: var(--s5); top: 50%;
+      width: 9px; height: 9px; margin-top: -7px;
+      border-right: 2px solid var(--accent-ink); border-bottom: 2px solid var(--accent-ink);
+      transform: rotate(45deg); transition: transform .15s ease;
+    }
+    .faq details[open] summary::after { transform: rotate(-135deg); margin-top: -2px; }
+    .faq details p { padding: 0 var(--s5) var(--s4); margin: 0; font-size: .93rem; }
+    .obs { margin-top: var(--s4); font-size: .9rem; color: var(--ink-soft); }
+    .band p .btn { margin-right: var(--s2); margin-bottom: var(--s2); }
+  </style>
+</Base>
