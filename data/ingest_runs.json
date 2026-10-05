@@ -1,17 +1,17 @@
 [
  {
   "source": "cnes",
-  "started_at": "2026-09-28T17:18:40Z",
-  "finished_at": "2026-09-28T17:19:30Z",
-  "record_count": 3662,
+  "started_at": "2026-10-05T17:49:07Z",
+  "finished_at": "2026-10-05T17:49:50Z",
+  "record_count": 3664,
   "status": "ok",
   "notes": null
  },
  {
   "source": "na_bmlt",
-  "started_at": "2026-09-28T17:19:30Z",
-  "finished_at": "2026-09-28T17:19:34Z",
-  "record_count": 2167,
+  "started_at": "2026-10-05T17:49:50Z",
+  "finished_at": "2026-10-05T17:49:55Z",
+  "record_count": 2170,
   "status": "ok",
   "notes": null
  }
